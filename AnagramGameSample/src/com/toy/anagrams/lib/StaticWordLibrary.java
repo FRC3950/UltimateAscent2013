@@ -84,6 +84,7 @@ final class StaticWordLibrary extends WordLibrary {
         "traditional",
         "robot",
         "paint",
+        "ultimate",
         "hello",
         "Air"
     };
@@ -135,6 +136,8 @@ final class StaticWordLibrary extends WordLibrary {
         "nuisngde",
         "rtdatioialn",
         "tobor",
+        "tapin",
+        "tlietuam",
         "tapin",
         "hlleo",
         "riA"
