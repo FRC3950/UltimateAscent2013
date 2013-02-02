@@ -65,8 +65,8 @@ public class RobotMap {
         driveTrainDriveMotors.setExpiration(0.1);
         driveTrainDriveMotors.setSensitivity(0.5);
         driveTrainDriveMotors.setMaxOutput(1.0);
-        driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, false);
-        driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, false);
+        driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+        driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         driveTrainShifter = new DoubleSolenoid(1, 1, 2);      
 	
         
