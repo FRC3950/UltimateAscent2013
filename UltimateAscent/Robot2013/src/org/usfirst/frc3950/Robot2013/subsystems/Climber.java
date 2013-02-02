@@ -31,4 +31,14 @@ public class Climber extends Subsystem {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
+    
+    public void setClimbScrewSpeed(double speed)
+    {
+       climbingScrew.set(speed); 
+    }
+    
+    public void pushClimberForward()
+    {
+        climbingSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
 }
