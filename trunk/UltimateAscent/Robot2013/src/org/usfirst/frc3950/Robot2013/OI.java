@@ -96,8 +96,8 @@ public class OI {
         startClimb.whenPressed(new Climb());
         leftDrive = new Joystick(1);
         
-        shift = new JoystickButton(leftDrive, 1);
-        shift.whenPressed(new ShiftGears());
+        //shift = new JoystickButton(leftDrive, 1);
+        //shift.whenPressed(new ShiftGears());
 	    
         // SmartDashboard Buttons
         SmartDashboard.putData("Autonomous", new Autonomous());
