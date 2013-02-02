@@ -12,7 +12,6 @@ import org.usfirst.frc3950.Robot2013.RobotMap;
 import org.usfirst.frc3950.Robot2013.commands.*;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
-
 /**
  *
  */
@@ -36,20 +35,20 @@ public class DriveTrain extends Subsystem {
     public DriveTrain() {
         drive = new RobotDrive(leftFront, leftBack, rightFront, rightBack);
     }
-        static double leftSped;
-        static double rightSped;
+    static double leftSped;
+    static double rightSped;
     public void tankDrive(double leftSpeed, double rightSpeed) {
         System.out.println("left: " + leftSpeed + " right: " + rightSpeed);
         drive.tankDrive(-leftSpeed, -rightSpeed);
         leftSped = leftSpeed;
         rightSped = rightSpeed;
-        
-        
-        
-        
-        
-        
-        
     }
     
+    public void shiftup()
+    {
+        shifter.set(DoubleSolenoid.Value.kForward);
     }
+    public void shiftdown(){
+        shifter.set(DoubleSolenoid.Value.kReverse);
+    }
+}
