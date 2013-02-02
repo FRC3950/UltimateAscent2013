@@ -44,11 +44,11 @@ public class DriveTrain extends Subsystem {
         rightSped = rightSpeed;
     }
     
-    public void shiftup()
+    public void shiftUp()
     {
         shifter.set(DoubleSolenoid.Value.kForward);
     }
-    public void shiftdown(){
+    public void shiftDown(){
         shifter.set(DoubleSolenoid.Value.kReverse);
     }
 }
