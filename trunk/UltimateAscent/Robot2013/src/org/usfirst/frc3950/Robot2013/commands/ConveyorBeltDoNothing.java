@@ -13,8 +13,8 @@ import org.usfirst.frc3950.Robot2013.Robot;
 /**
  *
  */
-public class  Screw extends Command {
-    public Screw() {
+public class  ConveyorBeltDoNothing extends Command {
+    public ConveyorBeltDoNothing() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
 	
@@ -23,9 +23,12 @@ public class  Screw extends Command {
     }
     // Called just before this Command runs the first time
     protected void initialize() {
+        Robot.shooter.conveyor(0.0);
     }
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        Robot.shooter.conveyor(0.0);
+        
     }
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {

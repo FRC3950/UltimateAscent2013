@@ -76,6 +76,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        //shooter.potentiometerReading();
     }
     /**
      * This function called periodically during test mode
