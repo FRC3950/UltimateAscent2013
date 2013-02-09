@@ -13,8 +13,8 @@ import org.usfirst.frc3950.Robot2013.Robot;
 /**
  *
  */
-public class  Autonomous extends Command {
-    public Autonomous() {
+public class  AutomaticClimb extends Command {
+    public AutomaticClimb() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
 	
