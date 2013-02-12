@@ -28,7 +28,6 @@ public class RobotMap {
     public static SpeedController driveTrainRightBack;
     public static RobotDrive driveTrainDriveMotors;
     public static Gyro driveTrainGyro;
-    public static Accelerometer driveTrainAccelerometer;
     public static DoubleSolenoid transmissionShifter;
     public static DoubleSolenoid climberPistonClimbingSolenoid;
     public static SpeedController climberScrewClimbingScrew;
@@ -67,13 +66,9 @@ public class RobotMap {
         driveTrainDriveMotors.setMaxOutput(1.0);
         driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-        /*driveTrainGyro = new Gyro(1, 4);
+        driveTrainGyro = new Gyro(1, 1);
 	LiveWindow.addSensor("Drive Train", "Gyro", driveTrainGyro);
-        driveTrainGyro.setSensitivity(1.25);
-        driveTrainAccelerometer = new Accelerometer(1, 2);
-	LiveWindow.addSensor("Drive Train", "Accelerometer", driveTrainAccelerometer);
-        driveTrainAccelerometer.setSensitivity(1.0);
-        driveTrainAccelerometer.setZero(2.5);*/
+        driveTrainGyro.setSensitivity(0.007);
         transmissionShifter = new DoubleSolenoid(1, 1, 2);      
 	
         
