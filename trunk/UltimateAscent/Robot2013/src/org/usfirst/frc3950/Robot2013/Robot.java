@@ -86,6 +86,8 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         //shooter.potentiometerReading();
+        double gyroAngle = driveTrain.getGyroAngle();
+        System.out.println("gyroAngle = " + gyroAngle);
     }
     /**
      * This function called periodically during test mode
