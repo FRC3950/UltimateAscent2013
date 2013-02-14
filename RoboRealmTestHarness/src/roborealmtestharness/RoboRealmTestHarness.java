@@ -105,6 +105,7 @@ public class RoboRealmTestHarness {
         {
             double distance = harness.calcImageDistance();
             
+            
             System.out.println("Distance from Image " + distance);
         }
     }
