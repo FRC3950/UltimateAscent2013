@@ -1,0 +1,111 @@
+<head><version>2.49.6</version></head>
+<Axis_Internet_Camera>
+  <auto_exposure>FALSE</auto_exposure>
+  <auto_back_light>TRUE</auto_back_light>
+  <color_level_value>50</color_level_value>
+  <exposure_value>50</exposure_value>
+  <auto_white_balance>TRUE</auto_white_balance>
+  <compression_index>5</compression_index>
+  <sharpness_value>50</sharpness_value>
+  <ip_address>10.39.50.11</ip_address>
+  <password>FRC</password>
+  <username>FRC</username>
+  <port>80</port>
+  <contrast_value>50</contrast_value>
+  <is_active>TRUE</is_active>
+  <resolution>2</resolution>
+  <brightness_value>50</brightness_value>
+</Axis_Internet_Camera>
+<Radial_Distortion>
+  <scale>1000.0</scale>
+  <coeff_c>0.0</coeff_c>
+  <coeff_d>0.0</coeff_d>
+  <center_x>0.5</center_x>
+  <crop_image>FALSE</crop_image>
+  <coeff_b>0.57</coeff_b>
+  <center_y>0.5</center_y>
+  <coeff_e>0.0</coeff_e>
+  <coeff_a>-1000.0</coeff_a>
+</Radial_Distortion>
+<RGB_Filter>
+  <hue_value>60</hue_value>
+  <hysteresis>20</hysteresis>
+  <min_value>200</min_value>
+  <channel>2</channel>
+</RGB_Filter>
+<Blob_Filter>
+  <filters>
+    <tab:5/>
+    <tab:2/>
+    <tab:4/>
+    <tab>
+      <filter>
+        <create_array>0</create_array>
+        <count_threshold>0</count_threshold>
+        <weight_threshold>0</weight_threshold>
+        <invert_count>0</invert_count>
+        <maximum_size>100</maximum_size>
+        <filter_id>33</filter_id>
+        <invert_threshold>0</invert_threshold>
+      </filter>
+    </tab>
+    <tab:6/>
+    <tab:3/>
+  </filters>
+  <sort_array_on_y>FALSE</sort_array_on_y>
+  <largest_is_background>FALSE</largest_is_background>
+  <name>Smaller Than 100</name>
+  <sort_array_on_x>FALSE</sort_array_on_x>
+  <show_weights>FALSE</show_weights>
+  <create_blob_array_variable>FALSE</create_blob_array_variable>
+</Blob_Filter>
+<Adaptive_Threshold>
+  <mean_offset>5</mean_offset>
+  <filter_size>7</filter_size>
+  <min_threshold>1</min_threshold>
+  <channel_type>1</channel_type>
+  <max_threshold>1</max_threshold>
+</Adaptive_Threshold>
+<Close>
+  <restrict_dilation>FALSE</restrict_dilation>
+  <erode_count>5</erode_count>
+  <dilate_count>5</dilate_count>
+  <close_borders>TRUE</close_borders>
+  <kernal_shape>4</kernal_shape>
+  <symmetrical>TRUE</symmetrical>
+</Close>
+<Blob_Filter>
+  <filters>
+    <tab:5/>
+    <tab:2/>
+    <tab:4/>
+    <tab>
+      <filter>
+        <create_array>1</create_array>
+        <ratio>2.85000</ratio>
+        <count_threshold>1</count_threshold>
+        <weight_threshold>0</weight_threshold>
+        <invert_count>0</invert_count>
+        <filter_id>63</filter_id>
+        <invert_threshold>0</invert_threshold>
+      </filter>
+    </tab>
+    <tab:6/>
+    <tab:3/>
+  </filters>
+  <sort_array_on_y>FALSE</sort_array_on_y>
+  <largest_is_background>FALSE</largest_is_background>
+  <name>Bigger Than 100/Right Size</name>
+  <sort_array_on_x>FALSE</sort_array_on_x>
+  <show_weights>TRUE</show_weights>
+  <create_blob_array_variable>FALSE</create_blob_array_variable>
+</Blob_Filter>
+<Blob_Replace>
+  <thickness>1</thickness>
+  <color_index>3</color_index>
+  <fill_shape>TRUE</fill_shape>
+  <order_array_on_x>FALSE</order_array_on_x>
+  <shape_index>15</shape_index>
+  <overlay_image>Source</overlay_image>
+  <order_array_on_y>FALSE</order_array_on_y>
+</Blob_Replace>
