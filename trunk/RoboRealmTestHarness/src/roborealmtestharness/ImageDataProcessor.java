@@ -12,8 +12,8 @@ import java.lang.Math;
  */
 public class ImageDataProcessor {
 
-    private final double CAMERA_FIELD_OF_VIEW = 47.5;
-    private final double TARGET_HEIGHT = 12.0;
+    private final double CAMERA_FIELD_OF_VIEW = 35;//47.5;
+    private final double TARGET_HEIGHT = 20.0;
     private int imageHeight;
 
     public ImageDataProcessor(int imageHeight) {
@@ -25,8 +25,8 @@ public class ImageDataProcessor {
             double lefty,
             double leftyy) {
         
-        System.out.println("righty = " + righty + " rightyy = " + rightyy);
-        System.out.println("lefty = " + lefty + " leftyy = " + leftyy);
+        //System.out.println("righty = " + righty + " rightyy = " + rightyy);
+        //System.out.println("lefty = " + lefty + " leftyy = " + leftyy);
         
         double targetSamples = 0.0;
         
