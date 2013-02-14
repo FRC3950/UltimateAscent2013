@@ -14,6 +14,9 @@ import java.util.Arrays;
 public class RoboRealmTestHarness {
     public final String ROBO_REALM_SERVER_ADDRESS = "10.39.50.9";
     
+    public final int NUM_BFR_COORDS = 8;
+    public final int MAX_SAMPLES = 30;
+    
     public final int RIGHTY_INDEX = 1;
     public final int RIGHTYY_INDEX = 7;
     public final int LEFTY_INDEX = 3;
@@ -21,6 +24,8 @@ public class RoboRealmTestHarness {
 
     private RR_API roboRealm;
     private ImageDataProcessor imgDataProcessor;
+    private int numSamples = 0;
+    private double distanceSum = 0.0;
     
     public RoboRealmTestHarness()
     {
@@ -49,16 +54,39 @@ public class RoboRealmTestHarness {
         
         if (coords != null)
         {
-  //          System.out.println("Bfr coords = " + Arrays.toString(coords));
+ //          System.out.println("Bfr coords = " + Arrays.toString(coords));
+             
+            int numBlobs = coords.length / NUM_BFR_COORDS;
             
-            return imgDataProcessor.calculateDistance(coords[RIGHTY_INDEX], coords[RIGHTYY_INDEX], coords[LEFTY_INDEX], coords[LEFTYY_INDEX]);
-        }
+            for (int indexOffset = 0, blobNum = 0; blobNum < numBlobs; ++blobNum, indexOffset += NUM_BFR_COORDS)
+            {
+                distanceSum += imgDataProcessor.calculateDistance(coords[indexOffset + RIGHTY_INDEX], coords[indexOffset + RIGHTYY_INDEX], coords[indexOffset + LEFTY_INDEX], coords[indexOffset + LEFTYY_INDEX]);
+                ++numSamples;
+            }
+         }
         else
         {
+            ++numSamples;
+            
             System.out.println("Couldn't get BFR_COORDINATES!");
         }
+     
+        double distance = distanceSum / numSamples;
         
-        return 0.0;
+        if (numSamples > MAX_SAMPLES)
+        {
+            System.out.println("Resetting sample count.");
+            numSamples = 1;
+            distanceSum = distance;
+        }
+        else if ((distance == Double.POSITIVE_INFINITY) || (distance == Double.NEGATIVE_INFINITY))
+        {
+            distance = 0.0;
+            numSamples = 0;
+            distanceSum = 0;
+        }
+        
+        return distance;
     }
     
     public double[] getBfrCoords()
@@ -73,7 +101,7 @@ public class RoboRealmTestHarness {
         {
             String[] strCoords = response.split(",");
             
-            if ((strCoords != null) && (strCoords.length >= EXPECTED_ELEMENTS))
+            if ((strCoords != null) && (strCoords.length >= EXPECTED_ELEMENTS) && ((strCoords.length % EXPECTED_ELEMENTS) == 0))
             {
                 result = convertStringsToDoubles(strCoords);
             }
