@@ -89,6 +89,11 @@ public class RoboRealmTestHarness {
         return distance;
     }
     
+    public double calcTargetAngle(double measuredDistance)
+    {
+        return imgDataProcessor.calculateAngleFromDistance(measuredDistance);
+    }
+    
     public double[] getBfrCoords()
     {
         final int EXPECTED_ELEMENTS = 8;
@@ -133,8 +138,14 @@ public class RoboRealmTestHarness {
         {
             double distance = harness.calcImageDistance();
             
-            
             System.out.println("Distance from Image " + distance);
+            
+            if (distance > 0.0)
+            {
+                double angle =  harness.calcTargetAngle(distance);
+                
+                System.out.println("Target angle is " + angle + " degrees");
+            }
         }
     }
 }
