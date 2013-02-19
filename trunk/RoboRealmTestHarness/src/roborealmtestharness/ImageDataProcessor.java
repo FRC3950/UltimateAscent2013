@@ -4,28 +4,57 @@
  */
 package roborealmtestharness;
 
-import java.lang.Math;
+import static java.lang.Math.*;
 
 /**
  *
  * @author Max
  */
 public class ImageDataProcessor {
-
-    private final double CAMERA_FIELD_OF_VIEW = 47.5; //35;//47.5;
-    private final double HIGH_GOAL_TARGET_HEIGHT = 20.0;    // inches
-    private final double MIDDLE_GOAL_TARGET_HEIGHT = 29;    // inches
-    private final double MID_GOAL_HEIGHT_TO_GOAL_MIDPOINT = 99.125;  // Inches.
-    private final double HIGH_GOAL_HEIGHT_TO_GOAL_MIDPOINT = 110.125;  // Inches.
+    
+     private static final double CAMERA_FIELD_OF_VIEW = 47.5; //35;
+    
+    private static final double HIGH_GOAL_TARGET_HEIGHT_IN_INCHES = 20.0;
+    private static final double MIDDLE_GOAL_TARGET_HEIGHT_IN_INCHES = 29;
+    
+    private static final double MID_GOAL_HEIGHT_TO_GOAL_MIDPOINT_IN_INCHES = 99.125;
+    private static final double HIGH_GOAL_HEIGHT_TO_GOAL_MIDPOINT_IN_INCHES = 110.125;
  
+    private GoalType targetGoal;
+    private double targetHeight;
+    private double totalGoalHeight;
+    
     private int imageHeight;
-    private double targetHeight = HIGH_GOAL_TARGET_HEIGHT;
-    private double lastTargetPixelHeight = 0.0;
-
-    public ImageDataProcessor(int imageHeight) {
+ 
+    public ImageDataProcessor(GoalType targetGoal, int imageHeight) {
+        
+        if (imageHeight <= 0) {
+            throw new IllegalArgumentException("imageHeight must be greater than zero");
+        }
+        
         this.imageHeight = imageHeight;
-    }
-
+        this.targetGoal = targetGoal;
+        
+        switch (targetGoal) {
+            case HighGoal:
+                targetHeight = HIGH_GOAL_TARGET_HEIGHT_IN_INCHES;
+                totalGoalHeight = HIGH_GOAL_HEIGHT_TO_GOAL_MIDPOINT_IN_INCHES;
+                break;
+                
+            case MiddleGoal:
+                targetHeight = MIDDLE_GOAL_TARGET_HEIGHT_IN_INCHES;
+                totalGoalHeight = MID_GOAL_HEIGHT_TO_GOAL_MIDPOINT_IN_INCHES;
+                break;
+                
+            default:
+                throw new IllegalArgumentException("targetGoal value is unexpected: " + targetGoal);
+        }
+     }
+    
+    
+    // This part of the formula is the same every time, calculate it once.
+    private static final double HALF_CAMERA_FOV_RADIANS = tan(((CAMERA_FIELD_OF_VIEW * PI) / 180.0) / 2.0);
+    
     public double calculateDistance(double righty,
             double rightyy,
             double lefty,
@@ -34,28 +63,26 @@ public class ImageDataProcessor {
         //System.out.println("righty = " + righty + " rightyy = " + rightyy);
         //System.out.println("lefty = " + lefty + " leftyy = " + leftyy);
         
-        double targetSamples = 0.0;
-        
         // based on these two side lines get the center line height
         // the center line is used since we want to aim to the center
         // of the target. This also removes any perspective distortion
         // where the right or left size may be a couple inches closer
         // or further away from the camera
-        lastTargetPixelHeight = ((lefty - leftyy) + (righty - rightyy)) / 2.0;
+        double targetPixelHeight = ((lefty - leftyy) + (righty - rightyy)) / 2.0;
         
         // Determine the distance in inches.
-        double totalDistance = (((targetHeight * imageHeight) / lastTargetPixelHeight) / 2.0) / Math.tan(((CAMERA_FIELD_OF_VIEW * Math.PI) / 180.0) / 2.0);
+        double totalDistance = (((targetHeight * imageHeight) / targetPixelHeight) / 2.0) / HALF_CAMERA_FOV_RADIANS;
         
         return totalDistance;
     }
     
+    private static final double RADIANS_TO_DEGREES = 180.0 / PI;
+    
     public double calculateAngleFromDistance(double measuredDistance)
     {
-        // ((((atan(((targetHeight * imageHeight) / targetPixelHeight) / 2)/ measuredDistance) * 2) * 180) / PI)
+        double angle = Math.asin(totalGoalHeight / measuredDistance);
         
-        double angle = Math.asin(HIGH_GOAL_HEIGHT_TO_GOAL_MIDPOINT / measuredDistance);
-        
-        angle *= 180.0 / Math.PI;
+        angle *= RADIANS_TO_DEGREES;
         return angle;
     }
 }
