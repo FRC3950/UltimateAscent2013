@@ -4,6 +4,8 @@
  */
 package roborealmtestharness;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+
 import java.util.Arrays;
 
 
@@ -12,140 +14,86 @@ import java.util.Arrays;
  * @author Max
  */
 public class RoboRealmTestHarness {
-    public final String ROBO_REALM_SERVER_ADDRESS = "10.39.50.9";
     
-    public final int NUM_BFR_COORDS = 8;
-    public final int MAX_SAMPLES = 30;
-    
-    public final int RIGHTY_INDEX = 1;
-    public final int RIGHTYY_INDEX = 7;
-    public final int LEFTY_INDEX = 3;
-    public final int LEFTYY_INDEX = 5;
-
-    private RR_API roboRealm;
-    private ImageDataProcessor imgDataProcessor;
-    private int numSamples = 0;
-    private double distanceSum = 0.0;
-    
-    public RoboRealmTestHarness()
-    {
-        roboRealm = new RR_API();
+    public static void tryNetworkTable() {
+        NetworkTable.setClientMode();
+        NetworkTable.setIPAddress("10.39.50.2");
+        NetworkTable table = NetworkTable.getTable("SmartDashboard");
         
-        // Need to handle if connect fails
-        roboRealm.connect(ROBO_REALM_SERVER_ADDRESS);
-        
-        int imageHeight = getImageHeight();
-        
-        System.out.println("IMAGE_HEIGHT = " + imageHeight);
-
-        imgDataProcessor = new ImageDataProcessor(imageHeight);
-    }
-    
-    private int getImageHeight()
-    {
-       String response = roboRealm.getVariable("IMAGE_HEIGHT");
-        
-        return Integer.parseInt(response);
-    }
-    
-    public double calcImageDistance()
-    {
-        double[] coords = getBfrCoords();
-        
-        if (coords != null)
-        {
- //          System.out.println("Bfr coords = " + Arrays.toString(coords));
-             
-            int numBlobs = coords.length / NUM_BFR_COORDS;
+        while (true) {
+            try {
+                Thread.sleep(1000);
             
-            for (int indexOffset = 0, blobNum = 0; blobNum < numBlobs; ++blobNum, indexOffset += NUM_BFR_COORDS)
-            {
-                distanceSum += imgDataProcessor.calculateDistance(coords[indexOffset + RIGHTY_INDEX], coords[indexOffset + RIGHTYY_INDEX], coords[indexOffset + LEFTY_INDEX], coords[indexOffset + LEFTYY_INDEX]);
-                ++numSamples;
+            }
+            catch (InterruptedException ex) {
+                // Eat the exception.
+            }
+            
+            double imageCount = table.getNumber("IMAGE_COUNT", 0.0);
+            
+            System.out.println("TestHarness: IMAGE_COUNT = " + imageCount);
+            
+            Object bfrCoords = table.getValue("BFR_COORDINATES");
+            
+            System.out.println("Test Harness: BFR_COORDINATES " + bfrCoords);
+            
+            if (bfrCoords != null) {
+               Object[] bfr = (Object[]) bfrCoords;
+            
+                for (int i = 0; i < bfr.length; ++i) {
+                    Object o = bfr[i];
+
+                    if (o instanceof Double) { 
+                      Double d = (Double)o; 
+                      System.out.println("Test Harness: BFR_COORDINATES " + d);
+                    }   
+                }
             }
          }
-        else
-        {
-            ++numSamples;
-            
-            System.out.println("Couldn't get BFR_COORDINATES!");
-        }
-     
-        double distance = distanceSum / numSamples;
-        
-        if (numSamples > MAX_SAMPLES)
-        {
-            System.out.println("Resetting sample count.");
-            numSamples = 1;
-            distanceSum = distance;
-        }
-        else if ((distance == Double.POSITIVE_INFINITY) || (distance == Double.NEGATIVE_INFINITY))
-        {
-            distance = 0.0;
-            numSamples = 0;
-            distanceSum = 0;
-        }
-        
-        return distance;
     }
     
-    public double calcTargetAngle(double measuredDistance)
-    {
-        return imgDataProcessor.calculateAngleFromDistance(measuredDistance);
+    private static void runVisionSubsystem() {
+        RoboRealmVisionTargetFinder targetFinder = new RoboRealmVisionTargetFinder(GoalType.HighGoal, null);
+        
+        targetFinder.start();
+        
+        while (true)
+        {
+            double avgDistance = targetFinder.getAvgDistance();
+            
+            System.out.println("Distance from Image " + avgDistance);
+
+            double targetAngle = targetFinder.getTargetAngle();
+            
+            System.out.println("Target angle is " + targetAngle + " degrees");
+            
+            System.out.println("Vision finder state is: " + targetFinder.getState());
+        }
     }
     
-    public double[] getBfrCoords()
-    {
-        final int EXPECTED_ELEMENTS = 8;
+    private static void runRobotServer() {
+        RobotVisionServer robotVisionServer = new RobotVisionServer("10.39.50.2");
         
-        double[] result = null;
-        
-        String response = roboRealm.getVariable("BFR_COORDINATES");
-        
-        if (response != null)
+        while (true)
         {
-            String[] strCoords = response.split(",");
-            
-            if ((strCoords != null) && (strCoords.length >= EXPECTED_ELEMENTS) && ((strCoords.length % EXPECTED_ELEMENTS) == 0))
-            {
-                result = convertStringsToDoubles(strCoords);
+            try {
+                Thread.sleep(60000);
+            }
+            catch (InterruptedException ex) {
+                
             }
         }
-        
-        return result;
-   }
-    
-    public static double[] convertStringsToDoubles(String[] strCoords)
-    {
-        double[] coords = new double[strCoords.length];
-        
-        for (int index = 0; index < strCoords.length; ++index)
-        {
-            coords[index] = Double.parseDouble(strCoords[index]);
-        }
-        
-        return coords;
     }
-    
-    /**
+     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        RoboRealmTestHarness harness = new RoboRealmTestHarness();
-        
-        while (true)
-        {
-            double distance = harness.calcImageDistance();
-            
-            System.out.println("Distance from Image " + distance);
-            
-            if (distance > 0.0)
-            {
-                double angle =  harness.calcTargetAngle(distance);
-                
-                System.out.println("Target angle is " + angle + " degrees");
-            }
+         if (args.length != 0) {
+            runVisionSubsystem();
         }
+         else {
+             runRobotServer();
+         } 
     }
 }
