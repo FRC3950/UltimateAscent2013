@@ -36,7 +36,7 @@ public class DriveTrain extends Subsystem {
     static double leftSped;
     static double rightSped;
     public void tankDrive(double leftSpeed, double rightSpeed) {
-        //System.out.println("left: " + leftSpeed + " right: " + rightSpeed);
+//        System.out.println("left: " + leftSpeed + " right: " + rightSpeed);
         drive.tankDrive(-leftSpeed, -rightSpeed);
         leftSped = leftSpeed;
         rightSped = rightSpeed;

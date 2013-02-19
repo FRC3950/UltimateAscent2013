@@ -31,6 +31,8 @@ public class RobotMap {
     public static DoubleSolenoid transmissionShifter;
     public static DoubleSolenoid climberPistonClimbingSolenoid;
     public static SpeedController climberScrewClimbingScrew;
+    public static DigitalInput climberScrewTopLimitSwitch;
+    public static DigitalInput climberScrewBottomLimitSwitch;
     public static SpeedController wheelOneSpeedController1;
     public static Encoder wheelOneEncoder1;
     public static PIDController wheelOneWheel1;
@@ -77,6 +79,12 @@ public class RobotMap {
         
         climberScrewClimbingScrew = new Victor(1, 6);
 	LiveWindow.addActuator("Climber Screw", "Climbing Screw", (Victor) climberScrewClimbingScrew);
+        
+        climberScrewTopLimitSwitch = new DigitalInput(1, 1);
+	LiveWindow.addSensor("Climber Screw", "TopLimitSwitch", climberScrewTopLimitSwitch);
+        
+        climberScrewBottomLimitSwitch = new DigitalInput(1, 7);
+	LiveWindow.addSensor("Climber Screw", "BottomLimitSwitch", climberScrewBottomLimitSwitch);
         
         wheelOneSpeedController1 = new Victor(1, 7);
 	LiveWindow.addActuator("Wheel One", "Speed Controller 1", (Victor) wheelOneSpeedController1);

@@ -61,6 +61,11 @@ public class ShootingScrew extends PIDSubsystem {
     public void potentiometerReading() {
         System.out.println(potentiometer.getVoltage());
     }
+    
+    public void setInclineAngle(double angle) {
+        System.out.println("Shooting Screw setting angle to " + angle + " degrees");
+    }
+    
     public void shooterManualSpeed(double height) {
         //shooterScrew.setSetpoint(height);
         screwSpeedController.set(height);
