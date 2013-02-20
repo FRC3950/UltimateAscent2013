@@ -73,4 +73,8 @@ public class GoalVisionTargetingCommandBase extends Command {
     // subsystems is scheduled to run
     protected final void interrupted() {
     }
+    
+    public final boolean isInterruptible() {
+        return false;
+    }
 }
