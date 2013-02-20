@@ -93,7 +93,7 @@ public class RoboRealmVisionTargetFinder implements Runnable {
     @Override
     public void run() 
     {
-        try {
+ //       try {
             if (!roboRealm.connect(ROBO_REALM_SERVER_ADDRESS)) {
                  // To do handle the error.
                 setState(State.Error);
@@ -151,10 +151,10 @@ public class RoboRealmVisionTargetFinder implements Runnable {
             }
             
             setState(State.Stopped);
-        }
-        catch (Exception ex) {
-            setState(State.Error);
-        }
+ //       }
+ //       catch (Exception ex) {
+//            setState(State.Error);
+//        }
     }
         
     private void setState(State newState) {
