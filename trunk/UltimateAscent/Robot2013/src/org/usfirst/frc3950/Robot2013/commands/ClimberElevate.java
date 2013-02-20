@@ -42,7 +42,7 @@ public class ClimberElevate extends Command {
                  maxTimeForCommand = timeSpan;
                  
                  if (maxTimeForCommand > MAX_LIMIT_SWITCH_TIMECHECK_THRESHOLD_IN_MS) {
-                     System.out.println("WARNING: Max time between for current command between limit switch checks is " + maxTimeForCommand + "ms.");
+                     System.out.println("WARNING: Max time (between) for current command between limit switch checks is " + maxTimeForCommand + "ms.");
                  }
              }
              
@@ -50,7 +50,7 @@ public class ClimberElevate extends Command {
                  maxTimeEverBetweenExecuteCalls = timeSpan;
                  
                  if (maxTimeEverBetweenExecuteCalls > MAX_LIMIT_SWITCH_TIMECHECK_THRESHOLD_IN_MS) {
-                     System.out.println("WARNING: Most time for all comand instances between limit switch checks is " + maxTimeEverBetweenExecuteCalls);
+                     System.out.println("WARNING: Most time for all command instances between limit switch checks is " + maxTimeEverBetweenExecuteCalls);
                  }
              }
              
