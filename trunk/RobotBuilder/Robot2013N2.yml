@@ -146,8 +146,8 @@ Children:
       Base: Gyro
       Children: []
       Properties:
-        Sensitivity: !!robotbuilder.data.properties.DoubleProperty {default: 0.007,
-          name: Sensitivity, validators: null, value: 0.007}
+        Sensitivity: !!robotbuilder.data.properties.DoubleProperty {default: 0.0070,
+          name: Sensitivity, validators: null, value: 0.0070}
         Input Module (Analog): !!robotbuilder.data.properties.ChoicesProperty
           choices: ['1']
           default: '1'
@@ -677,6 +677,22 @@ Children:
           value: 1.0}
         Maximum Input: !!robotbuilder.data.properties.DoubleProperty {default: 5,
           name: Maximum Input, validators: null, value: 5.0}
+    - Name: Angle Lower Limit
+      Base: Limit Switch
+      Children: []
+      Properties:
+        Input Channel (Digital): !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id014
+          default: '1'
+          name: Input Channel (Digital)
+          validators: *id015
+          value: '10'
+        Input Module (Digital): !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id016
+          default: '1'
+          name: Input Module (Digital)
+          validators: *id017
+          value: '1'
     Properties:
       D: !!robotbuilder.data.properties.DoubleProperty {default: 0, name: D, validators: null,
         value: 0.0}
@@ -1321,6 +1337,78 @@ Children:
           name: When to Run
           validators: null
           value: whenPressed
+    - Name: Go To Load Angle
+      Base: Joystick Button
+      Children: []
+      Properties:
+        Command: !!robotbuilder.data.properties.TypeSelectionProperty
+          default: None
+          name: Command
+          type: Command
+          validators: *id032
+          value: Load Angle
+        Button: !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id033
+          default: '1'
+          name: Button
+          validators: null
+          value: '1'
+        Joystick: !!robotbuilder.data.properties.ParentProperty {default: parent,
+          name: Joystick, validators: null, value: Climber Stick}
+        When to Run: !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id034
+          default: whileHeld
+          name: When to Run
+          validators: null
+          value: whenPressed
+    - Name: Semi Auto Shot
+      Base: Joystick Button
+      Children: []
+      Properties:
+        Command: !!robotbuilder.data.properties.TypeSelectionProperty
+          default: None
+          name: Command
+          type: Command
+          validators: *id032
+          value: Auto Fire Four Command Group
+        Button: !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id033
+          default: '1'
+          name: Button
+          validators: null
+          value: '11'
+        Joystick: !!robotbuilder.data.properties.ParentProperty {default: parent,
+          name: Joystick, validators: null, value: Climber Stick}
+        When to Run: !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id034
+          default: whileHeld
+          name: When to Run
+          validators: null
+          value: whileHeld
+    - Name: Do Not Shoot
+      Base: Joystick Button
+      Children: []
+      Properties:
+        Command: !!robotbuilder.data.properties.TypeSelectionProperty
+          default: None
+          name: Command
+          type: Command
+          validators: *id032
+          value: Do Not Shoot Command Group
+        Button: !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id033
+          default: '1'
+          name: Button
+          validators: null
+          value: '11'
+        Joystick: !!robotbuilder.data.properties.ParentProperty {default: parent,
+          name: Joystick, validators: null, value: Climber Stick}
+        When to Run: !!robotbuilder.data.properties.ChoicesProperty
+          choices: *id034
+          default: whileHeld
+          name: When to Run
+          validators: null
+          value: whenReleased
     Properties:
       Number: !!robotbuilder.data.properties.ChoicesProperty
         choices: *id035
@@ -1520,12 +1608,49 @@ Children:
         name: Requires, type: Subsystem, validators: null, value: None}
       Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
         name: Button on SmartDashboard, validators: null, value: true}
+  - Name: Load Angle
+    Base: Command
+    Children: []
+    Properties:
+      Requires: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
+        name: Requires, type: Subsystem, validators: null, value: Shooting Screw}
+      Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
+        name: Button on SmartDashboard, validators: null, value: true}
+  - Name: Auto Fire Four Command Group
+    Base: Command Group
+    Children: []
+    Properties:
+      Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
+        name: Button on SmartDashboard, validators: null, value: true}
+  - Name: Do Not Shoot Command Group
+    Base: Command Group
+    Children: []
+    Properties:
+      Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
+        name: Button on SmartDashboard, validators: null, value: true}
+  - Name: Angle Up
+    Base: Command
+    Children: []
+    Properties:
+      Requires: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
+        name: Requires, type: Subsystem, validators: null, value: Shooting Screw}
+      Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
+        name: Button on SmartDashboard, validators: null, value: true}
+  - Name: Angle Down
+    Base: Command
+    Children: []
+    Properties:
+      Requires: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
+        name: Requires, type: Subsystem, validators: null, value: Shooting Screw}
+      Button on SmartDashboard: !!robotbuilder.data.properties.BooleanProperty {default: true,
+        name: Button on SmartDashboard, validators: null, value: true}
   Properties: {}
 Properties:
   Autonomous Command: !!robotbuilder.data.properties.TypeSelectionProperty {default: None,
     name: Autonomous Command, type: Command, validators: null, value: None}
   Wiring File: !!robotbuilder.data.properties.FileProperty {default: '', extension: html,
-    folder: false, name: Wiring File, validators: null, value: /Users/rsaccone/NSRobotWork/NSLIRobot2013/trunk/UltimateAscent/Wiring 2013.html}
+    folder: false, name: Wiring File, validators: null, value: 'C:\Users\Developer\Documents\NetBeansProjects\trunk\UltimateAscent\Wiring
+      2013.html'}
   C++ Windriver Workspace: !!robotbuilder.data.properties.FileProperty {default: 'C:\Windriver\workspace',
     extension: null, folder: true, name: C++ Windriver Workspace, validators: null,
     value: 'C:\Windriver\workspace'}
@@ -1539,6 +1664,6 @@ Properties:
     validators: null, value: 3950}
   Export Commands: !!robotbuilder.data.properties.BooleanProperty {default: true,
     name: Export Commands, validators: null, value: true}
-  Java Project Directory: !!robotbuilder.data.properties.FileProperty {default: /Users/rsaccone/NetBeansProjects,
+  Java Project Directory: !!robotbuilder.data.properties.FileProperty {default: 'C:\Users\Developer\NetBeansProjects',
     extension: null, folder: true, name: Java Project Directory, validators: null,
-    value: /Users/rsaccone/NSRobotWork/NSLIRobot2013/trunk/UltimateAscent}
+    value: 'C:\Users\Developer\Documents\NetBeansProjects\trunk\UltimateAscent'}
