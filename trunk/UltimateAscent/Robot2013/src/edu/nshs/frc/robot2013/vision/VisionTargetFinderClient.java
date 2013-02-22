@@ -36,8 +36,8 @@ public class VisionTargetFinderClient implements ITableListener {
         data.add(0);
         data.add(0);
         
-        table.putValue(VisionNetworkTableDefs.TARGETING_RESULT, table);
-        
+        table.putValue(VisionNetworkTableDefs.TARGETING_RESULT, data);
+        System.out.println("Cleared Vision Table Values");
         /*
         table.putNumber(VisionNetworkTableDefs.TARGET_TYPE_REQUEST_ID, (double)0);
         table.putNumber(VisionNetworkTableDefs.TARGET_TYPE_REQUEST, (double)GoalType.None);
@@ -90,8 +90,8 @@ public class VisionTargetFinderClient implements ITableListener {
         System.out.println("ValueChanged: " + key + " Value: " + value + " new: " + isNew);
         
         if (key.equals(VisionNetworkTableDefs.TARGETING_RESULT)) {
-            if (value instanceof NumberArray) {
-                NumberArray msgResult = (NumberArray)value;
+            double[] msgResult = tryToConvertObjectToDoubleArray(value);
+            if (msgResult != null) {
                 synchronized(lock) {
                     parseTargetingResult(msgResult);
                 }
@@ -116,21 +116,21 @@ public class VisionTargetFinderClient implements ITableListener {
          */
     }
     
-    private boolean parseTargetingResult(NumberArray targetingResult) {
+    private boolean parseTargetingResult(double[] targetingResult) {
          
-        if (targetingResult.size() != VisionNetworkTableDefs.TARGETING_RESULT_ARRAY_SIZE) {
-            System.out.println("Targeting Result contained " + targetingResult.size() + " which isn't expected number of values" + VisionNetworkTableDefs.TARGETING_RESULT_ARRAY_SIZE);
+        if (targetingResult.length != VisionNetworkTableDefs.TARGETING_RESULT_ARRAY_SIZE) {
+            System.out.println("Targeting Result contained " + targetingResult.length + " which isn't expected number of values" + VisionNetworkTableDefs.TARGETING_RESULT_ARRAY_SIZE);
             return false;
         }
         
-        long resultId = (long)targetingResult.get(VisionNetworkTableDefs.TARGETING_RESULT_ID_INDEX);
+        long resultId = (long)targetingResult[VisionNetworkTableDefs.TARGETING_RESULT_ID_INDEX];
         
         if (resultId != requestId) {
             System.out.println("Targeting Result Id (" + resultId + ") != requestId (" + requestId + ") ignoring");
             return false;
         }
 
-        int resultGoalType = (int)targetingResult.get(VisionNetworkTableDefs.TARGETING_RESULT_GOAL_TYPE_INDEX);
+        int resultGoalType = (int)targetingResult[VisionNetworkTableDefs.TARGETING_RESULT_GOAL_TYPE_INDEX];
         
         if (resultGoalType != goalType) {
             System.out.println("Targeting Result Goal Type (" + resultGoalType + ") != requestGoalType (" + goalType + ") ignoring");
@@ -138,8 +138,8 @@ public class VisionTargetFinderClient implements ITableListener {
         }
         
         // Ids and goal type match!
-        angle = targetingResult.get(VisionNetworkTableDefs.TARGETING_RESULT_ANGLE_INDEX);
-        avgDistance = targetingResult.get(VisionNetworkTableDefs.TARGETING_RESULT_AVG_DISTANCE);
+        angle = targetingResult[VisionNetworkTableDefs.TARGETING_RESULT_ANGLE_INDEX];
+        avgDistance = targetingResult[VisionNetworkTableDefs.TARGETING_RESULT_AVG_DISTANCE];
         
         return true;
     }
@@ -166,4 +166,24 @@ public class VisionTargetFinderClient implements ITableListener {
         return result;
     }
     */ 
+    
+    private static double[] tryToConvertObjectToDoubleArray(Object o) {
+        if (o instanceof Object[]) {
+            Object[] oarray = (Object[]) o;
+            double result[] = new double[oarray.length];
+
+            for (int i = 0; i < oarray.length; ++i) {
+                if (oarray[i] instanceof Double) {
+                    result[i] = ((Double) oarray[i]).doubleValue();
+                } else {
+                    // Unexpected result.
+                    return null;
+                }
+            }
+
+            return result;
+        }
+
+        return null;
+    }
 }
