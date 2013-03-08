@@ -14,6 +14,10 @@ import org.usfirst.frc3950.Robot2013.Robot;
  *
  */
 public class  LoadAngle extends Command {
+    private final double LOADING_ANGLE = 20.0;
+    
+    private double angleVoltage = 0.0;
+    
     public LoadAngle() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -27,16 +31,28 @@ public class  LoadAngle extends Command {
     }
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+        Robot.shootingScrew.setPIDSubsystem(true);
+        angleVoltage = Robot.shootingScrew.setInclineAngle(LOADING_ANGLE);
     }
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
+        if (Robot.shootingScrew.hasReachedTargetVoltage(angleVoltage))
+        {
+            return true;
+        }
+        
         return false;
     }
     // Called once after isFinished returns true
     protected void end() {
     }
+    
+    public boolean isInterruptible() {
+        return true;
+    }
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+        Robot.shootingScrew.setPIDSubsystem(false);
     }
 }
