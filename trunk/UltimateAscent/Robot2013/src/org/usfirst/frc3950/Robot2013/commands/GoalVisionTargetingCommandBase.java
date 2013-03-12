@@ -18,6 +18,7 @@ public class GoalVisionTargetingCommandBase extends Command {
     private int goalType;
     private VisionTargetFinderClient vtfc;
     private double angle = 0.0;
+    private double angleVoltage = 0.0;
     private double avgDistance = 0.0;
     private boolean foundAngle = false;
     
@@ -51,17 +52,27 @@ public class GoalVisionTargetingCommandBase extends Command {
             this.angle = angle;
             this.avgDistance = distance;
             foundAngle = true;
-            Robot.shootingScrew.setInclineAngle(angle);
+            Robot.shootingScrew.setPIDSubsystem(true);
+            angleVoltage = Robot.shootingScrew.setInclineAngle(angle);
         }
      }
 
     // Make this return true when this Command no longer needs to run execute()
     protected final boolean isFinished() {
-        boolean result = foundAngle || this.isTimedOut();
         
-        System.out.println("GVTCB: isFinished = " + result +" foundAngle = " + foundAngle + ", timedOut = " + this.isTimedOut());
+        if (!foundAngle && this.isTimedOut()) {
+            System.out.println("GTVCB: isFinished - No angle found and time out reached.  Returning true");
+            return true;
+        }
         
-        return result;
+        // Have an angle that we're trying to target so monitor the PID
+        // to see if it has been reached.
+        if (Robot.shootingScrew.hasReachedTargetVoltage(angleVoltage)) {
+            System.out.println("GVTCB: isFinished = true foundAngle = " + foundAngle + ", timedOut = " + this.isTimedOut());
+            return true;
+        }
+        
+        return false;
     }
 
     // Called once after isFinished returns true
@@ -69,12 +80,14 @@ public class GoalVisionTargetingCommandBase extends Command {
         vtfc.cancel();
     }
 
+    public boolean isInterruptible() {
+        return true;
+    }
+    
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected final void interrupted() {
-    }
-    
-    public final boolean isInterruptible() {
-        return false;
+        Robot.shootingScrew.setPIDSubsystem(false);
+
     }
 }
