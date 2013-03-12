@@ -191,9 +191,9 @@ public class ShootingScrew extends PIDSubsystem {
             voltage = 0.0;
         }
         screwSpeedController.set(voltage);
-        System.out.println("shooterManualSpeed: motor voltage = " + voltage);
+        //System.out.println("shooterManualSpeed: motor voltage = " + voltage);
         
-        System.out.println("shooterManualSpeed: Pot Voltage = " + getPotentiometerReading());
+        //System.out.println("shooterManualSpeed: Pot Voltage = " + getPotentiometerReading());
  
     }
     
