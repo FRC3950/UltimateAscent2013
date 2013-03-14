@@ -12,7 +12,7 @@ import static java.lang.Math.*;
  */
 public class ImageDataProcessor {
     
-     private static final double CAMERA_FIELD_OF_VIEW = 47.5; //35;
+     private static final double CAMERA_FIELD_OF_VIEW = 36; //47.5
     
     private static final double HIGH_GOAL_TARGET_HEIGHT_IN_INCHES = 20.0;
     private static final double MIDDLE_GOAL_TARGET_HEIGHT_IN_INCHES = 29;
