@@ -24,6 +24,7 @@ public class ShootingScrew extends PIDSubsystem {
     private static final double Ki = 0.0;
     private static final double Kd = 1.0;
     
+    private volatile double angleErrorCorrectionFactor = 0.0;
     private boolean pidEnabled = false;
     private boolean angleLowerLimitHit = false;
     private double potFloor = 0.0;
@@ -160,10 +161,23 @@ public class ShootingScrew extends PIDSubsystem {
         return Math.abs(actualPosition - pidTargetVoltage) <= .01;
     }
     
+    private static final double ERROR_CORRECTION_MIN = -100.00;
+    private static final double ERROR_CORRECTION_MAX = 100.00;
+    
+    public void setErrorCorrection(double newVal) {
+        angleErrorCorrectionFactor = newVal;
+     }
+    
+    public double getErrorCorrection() {
+        return angleErrorCorrectionFactor;
+    }
+    
     private static final double MAX_ANGLE = 45.0;
     private static final double MIN_ANGLE = 0.0;
     
     public double setInclineAngle(double angle) {
+        angle *= ((angleErrorCorrectionFactor + 100.0) / 100.00);
+        
             if (angle < MIN_ANGLE) {
             angle = MIN_ANGLE;
         }
