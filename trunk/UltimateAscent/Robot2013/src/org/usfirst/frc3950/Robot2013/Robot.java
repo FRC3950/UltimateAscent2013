@@ -72,11 +72,10 @@ public class Robot extends IterativeRobot {
     
     public void autonomousInit() {
         Robot.shootingScrew.findHomePosition();
-
         // schedule the autonomous command (example)
         if (autonomousCommand != null) autonomousCommand.start();
-       // autonomousCommand= new  AutoFireFourCommandGroup();
-        //autonomousCommand.start();
+        autonomousCommand= new  AutoFireFourCommandGroup();
+        autonomousCommand.start();
     }
     /**
      * This function is called periodically during autonomous
