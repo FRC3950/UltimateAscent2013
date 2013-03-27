@@ -34,10 +34,7 @@ public class AutoFireFourCommandGroup extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-        // addSequential(StartingShotAngle());
-        // go to zero position 
-        // go to high goal
-        // wait until the firing mechanism is at the right angle 
+        addSequential(new HighGoalVisionTargeting());
         addParallel(new MaxShootSpeedCommandGroup());
         addParallel(new ConveyorBeltForwards());
     }

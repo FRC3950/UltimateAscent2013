@@ -71,7 +71,7 @@ public class RobotMap {
         driveTrainDriveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         driveTrainGyro = new Gyro(1, 1);
 	LiveWindow.addSensor("Drive Train", "Gyro", driveTrainGyro);
-        driveTrainGyro.setSensitivity(0.0070);
+        driveTrainGyro.setSensitivity(0.007);
         transmissionShifter = new DoubleSolenoid(1, 1, 2);      
 	
         
