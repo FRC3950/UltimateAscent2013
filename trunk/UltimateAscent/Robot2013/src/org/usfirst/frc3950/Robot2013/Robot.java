@@ -73,9 +73,12 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         Robot.shootingScrew.findHomePosition();
         // schedule the autonomous command (example)
-        if (autonomousCommand != null) autonomousCommand.start();
-        autonomousCommand= new  AutoFireFourCommandGroup();
+       
+        if (autonomousCommand == null) {
+            autonomousCommand = new AutoFireFourCommandGroup();
+        }
         autonomousCommand.start();
+       
     }
     /**
      * This function is called periodically during autonomous
@@ -88,7 +91,15 @@ public class Robot extends IterativeRobot {
         // teleop starts running. If you want the autonomous to 
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (autonomousCommand != null) autonomousCommand.cancel();
+        if (autonomousCommand != null) { 
+            autonomousCommand.cancel();
+        }
+            
+        ConveyorBeltDoNothing conveyorStop = new ConveyorBeltDoNothing();
+
+        conveyorStop.start();
+        StopBothWheelsCommandGroup stopWheels = new StopBothWheelsCommandGroup();
+        stopWheels.start();
         
         Robot.shootingScrew.findHomePosition();
     }
@@ -97,9 +108,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        shootingScrew.potentiometerReading();
-        //double gyroAngle = driveTrain.getGyroAngle();
-        //System.out.println("gyroAngle = " + gyroAngle);
+        //shootingScrew.potentiometerReading();
     }
     /**
      * This function called periodically during test mode

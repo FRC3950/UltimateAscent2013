@@ -34,6 +34,8 @@ public class ClimberElevate extends Command {
     
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+//        System.out.println("Climber Up or Down Hit!");
+        
         long currTime = System.currentTimeMillis();
          if (lastExecuteCallTime != 0) {
              long timeSpan = currTime - lastExecuteCallTime;

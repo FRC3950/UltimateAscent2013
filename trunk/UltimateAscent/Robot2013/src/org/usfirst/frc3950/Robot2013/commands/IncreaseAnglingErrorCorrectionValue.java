@@ -14,6 +14,7 @@ import org.usfirst.frc3950.Robot2013.Robot;
  *
  */
 public class  IncreaseAnglingErrorCorrectionValue extends Command {
+    private static final double INCREMENT_VALUE = 2.0;
     public IncreaseAnglingErrorCorrectionValue() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -26,11 +27,12 @@ public class  IncreaseAnglingErrorCorrectionValue extends Command {
     }
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        
+        Robot.shootingScrew.setErrorCorrection(Robot.shootingScrew.getErrorCorrection() + INCREMENT_VALUE);
+
     }
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
     // Called once after isFinished returns true
     protected void end() {

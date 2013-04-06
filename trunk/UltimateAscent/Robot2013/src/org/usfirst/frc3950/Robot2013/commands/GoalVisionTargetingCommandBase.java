@@ -13,7 +13,7 @@ import org.usfirst.frc3950.Robot2013.Robot;
  * @author rsaccone
  */
 public class GoalVisionTargetingCommandBase extends Command {
-    private double VISION_TARGETING_TIMEOUT_SECS = 60.0;
+    private double VISION_TARGETING_TIMEOUT_SECS = 5.0;
 
     private int goalType;
     private VisionTargetFinderClient vtfc;
@@ -34,7 +34,7 @@ public class GoalVisionTargetingCommandBase extends Command {
             vtfc.cancel();
             vtfc = null;
         }
-        Robot.shootingScrew.setPIDSubsystem(false);
+//        Robot.shootingScrew.setPIDSubsystem(false);
         
         angle = 0.0;
         angleVoltage = 0.0;
@@ -77,7 +77,7 @@ public class GoalVisionTargetingCommandBase extends Command {
             this.avgDistance = distance;
             foundAngle = true;
             Robot.shootingScrew.setPIDSubsystem(true);
-            angleVoltage = Robot.shootingScrew.setInclineAngle(angle);
+            angleVoltage = Robot.shootingScrew.setInclineAngle(angle, true);
         }
      }
 
