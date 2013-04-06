@@ -34,16 +34,18 @@ public class ClimberScrew extends Subsystem {
         //setDefaultCommand(new MySpecialCommand());
     }
     public void setHeight(double height) {
+        
+//        System.out.println("Climber Scew heigh = " + height);
         boolean limitHit = false;
         height *= -1.0;
         
         if (height < 0.0) {
             limitHit = pollBottomLimitSwitch();
- //           System.out.println("bottom limit hit = " + limitHit);
+//            System.out.println("bottom limit hit = " + limitHit);
         }
         else if (height > 0.0) {
             limitHit = pollTopLimitSwitch();
- //           System.out.println("top limit hit = " + limitHit);
+//            System.out.println("top limit hit = " + limitHit);
         }
         
         if (limitHit) {

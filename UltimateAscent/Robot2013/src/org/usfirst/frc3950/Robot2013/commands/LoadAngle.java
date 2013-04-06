@@ -14,7 +14,7 @@ import org.usfirst.frc3950.Robot2013.Robot;
  *
  */
 public class  LoadAngle extends Command {
-    private final double LOADING_ANGLE = 20.0;
+    private final double LOADING_ANGLE = 16.0;
     
     private double angleVoltage = 0.0;
     
@@ -32,7 +32,7 @@ public class  LoadAngle extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
         Robot.shootingScrew.setPIDSubsystem(true);
-        angleVoltage = Robot.shootingScrew.setInclineAngle(LOADING_ANGLE);
+        angleVoltage = Robot.shootingScrew.setInclineAngle(LOADING_ANGLE, false);
     }
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
