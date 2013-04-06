@@ -18,11 +18,11 @@ public class RoboRealmVisionTargetFinder implements Runnable {
         Error
     }
     
-    private static final String ROBO_REALM_SERVER_ADDRESS = "10.39.50.9";
+    private static final String ROBO_REALM_SERVER_ADDRESS = "127.0.0.1"; //10.39.50.9";
     
     private static final int NUM_BFR_COORDS = 8;
     private static final int MAX_SAMPLES = 30;                     // Number of samples to use in averaging the distance.
-    private static final long SAMPLING_INTERVAL_IN_MS = 1 * 1000;  // How often to calculate the distance and target angle.
+    private static final long SAMPLING_INTERVAL_IN_MS = 100; //1 * 1000;  // How often to calculate the distance and target angle.
     
     private static final int RIGHTY_INDEX = 1;
     private static final int RIGHTYY_INDEX = 7;
@@ -207,10 +207,16 @@ public class RoboRealmVisionTargetFinder implements Runnable {
 
         if (response != null) {
             String[] strCoords = response.split(",");
+            
+            System.out.println("Got BFR Coords");
 
             if ((strCoords != null) && (strCoords.length >= NUM_BFR_COORDS) && ((strCoords.length % NUM_BFR_COORDS) == 0)) {
                 result = convertStringsToDoubles(strCoords);
             }
+            else {
+                System.out.println("Couldn't retrieve BFR coords from RoboRealm");
+            }
+                
         }
 
         return result;
