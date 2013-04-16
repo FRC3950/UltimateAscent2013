@@ -82,11 +82,11 @@ public class ShootingScrew extends PIDSubsystem {
     
     private static final double HOME_FINDING_SPEED = 1.0; //0.6;
     
-    public void findHomePosition() {
+    public void findHomePosition(boolean forceFind) {
         
         // Check to see if the pot floor has already been
         // found.  Don't check for it again.
-        if (potFloorCheckComplete) {
+        if (!forceFind && potFloorCheckComplete) {
             return;
         }
         
