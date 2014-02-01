@@ -31,6 +31,6 @@ public:
 	DriveSubsystem();
 	void InitDefaultCommand();
 	void MecanumDrive(float x, float y, float twist);
-	void TankDrive(float left, float right );
+	
 };
 #endif

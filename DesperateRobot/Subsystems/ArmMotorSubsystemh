@@ -1,0 +1,23 @@
+#ifndef ARMMOTORSUBSYSTEM_H
+#define ARMMOTORSUBSYSTEM_H
+#include "Commands/Subsystem.h"
+#include "WPILib.h"
+
+/**
+ *
+ *
+ * @author DriverStation
+ */
+class ArmMotorSubsystem: public Subsystem {
+private:
+	// It's desirable that everything possible under private except
+	// for methods that implement subsystem capabilities
+public:
+	static SpeedController* armController1;
+	
+	ArmMotorSubsystem();
+	void InitDefaultCommand();
+	void MoveArm(float y);
+};
+
+#endif

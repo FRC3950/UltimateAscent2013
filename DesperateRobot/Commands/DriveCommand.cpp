@@ -21,7 +21,7 @@ void DriveCommand::Initialize() {
 }
 // Called repeatedly when this Command is scheduled to run
 void DriveCommand::Execute() {
-	printf("DriveCommand::Execute -> Entered.\n");
+	//printf("DriveCommand::Execute -> Entered.\n");
 //	Robot::driveSubsystem->MecanumDrive(Robot::oi->getBlueJoystick());
 	//float left = -Robot::oi->getBlueJoystick()->GetY();
 	//float right= -Robot::oi->getRedJoystick()->GetY();
