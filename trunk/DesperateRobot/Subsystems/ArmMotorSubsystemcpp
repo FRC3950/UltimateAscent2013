@@ -1,0 +1,22 @@
+#include "ArmMotorSubsystem.h"
+#include "../Robotmap.h"
+#include "../Commands/ArmCommand.h"
+
+
+ArmMotorSubsystem::ArmMotorSubsystem() : Subsystem("ArmMotorSubsystem") {
+	armController1 = RobotMap::armMotorSubsystemSpeedController;
+}
+    
+void ArmMotorSubsystem::InitDefaultCommand() {
+	// Set the default command for a subsystem here.
+	//SetDefaultCommand(new ArmCommand());
+}
+
+void MoveArm(float y)
+{
+	ArmMotorSubsystem::armController1->Set(y);
+	
+}
+
+// Put methods for controlling this subsystem
+// here. Call these from Commands.
