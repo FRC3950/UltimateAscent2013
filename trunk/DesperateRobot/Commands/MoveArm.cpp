@@ -1,36 +1,35 @@
-#include "ArmCommand.h"
+#include "MoveArm.h"
+#include "../Subsystems/ArmPIDSubsystem.h"
 
-ArmCommand::ArmCommand() {
+MoveArm::MoveArm() {
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
-	Requires(Robot::armMotorSubsystem);
+	Requires(Robot::armPIDSubsystem);
 	
 }
 
 // Called just before this Command runs the first time
-void ArmCommand::Initialize() {
+void MoveArm::Initialize() {
 	
 }
 
 // Called repeatedly when this Command is scheduled to run
-void ArmCommand::Execute() {
-	
-	Robot::armMotorSubsystem->MoveArm(Robot::oi->GetArmStickY());
-	
-	
+void MoveArm::Execute() {
+	//Robot.shootingScrew.shooterManualSpeed(Robot.oi.getShooterSpeed());
+	Robot::armPIDSubsystem->ManualMoveArmControl(Robot::oi->GetArmSpeed());
 }
 
 // Make this return true when this Command no longer needs to run execute()
-bool ArmCommand::IsFinished() {
+bool MoveArm::IsFinished() {
 	return false;
 }
 
 // Called once after isFinished returns true
-void ArmCommand::End() {
+void MoveArm::End() {
 	
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void ArmCommand::Interrupted() {
+void MoveArm::Interrupted() {
 }
