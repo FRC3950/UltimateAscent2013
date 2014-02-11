@@ -14,12 +14,12 @@ void ArmCommand::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void ArmCommand::Execute() {
-	
+	/*
 	//Robot::armPIDSubsystem->MoveArm(Robot::oi->GetArmStickY());
 	
-	bool TopButtonPressed = Robot::oi->GetTopButton();
-	bool ShootButtonPressed = Robot::oi->GetShootButton();
-	bool BottomButtonPressed = Robot::oi->GetBottomButton();
+	bool TopButtonPressed = Robot::oi->GetTopPositionButton();
+	bool ShootButtonPressed = Robot::oi->GetShootPositionButton();
+	bool BottomButtonPressed = Robot::oi->GetBottomPositionButton();
 	
 	if (TopButtonPressed == true)
 	{
@@ -41,7 +41,7 @@ void ArmCommand::Execute() {
 	{
 		// INSERT CODE TO MOVE ARM TO BOTTOM
 	}
-	
+	*/
 }
 
 // Make this return true when this Command no longer needs to run execute()
