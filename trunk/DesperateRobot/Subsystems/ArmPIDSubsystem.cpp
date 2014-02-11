@@ -24,8 +24,8 @@ ArmPIDSubsystem::ArmPIDSubsystem()
 	  upperArmLimitHit(false),
 	  lowerArmLimitHit(false),
 	  pidEnabled(false),
-	  potFloor(0.0),
-	  potFloorCheckComplete(false)
+	  potOrigin(0.0),
+	  potOriginCheckComplete(false)
 {
 	SetAbsoluteTolerance(0.2);
 	GetPIDController()->SetContinuous(false);
@@ -122,11 +122,12 @@ void ArmPIDSubsystem::InitDefaultCommand() {
 	SetDefaultCommand(new MoveArm());
 	
 }
-
+static const float MAX_ANGLE = 90.0;
+static const float MIN_ANGLE = 0.0;
+	
 float ArmPIDSubsystem::SetArmAngle(float angle, bool useErrorCorrection)
 {
-	static const float MAX_ANGLE = 90.0;
-	static const float MIN_ANGLE = 0.0;
+
 	static const float ERROR_CORRECTION_FACTOR = 0;
 	
 	if (useErrorCorrection)
@@ -157,21 +158,24 @@ static const float MAX_POTENT_VOLTAGE = 1.6;
 
 float ArmPIDSubsystem::AngleToVoltage(float angle)
 {
-	float result = angle * VOLTS_PER_DEGREE_FOR_5K_POT + potFloor;
+	float complementAngle = MAX_ANGLE - angle;
+	
+	float result = potOrigin - (complementAngle * VOLTS_PER_DEGREE_FOR_5K_POT);
 	if (result > MAX_POTENT_VOLTAGE)
 	{
 		result = MAX_POTENT_VOLTAGE;
 	}
+	
 	return result;
 }
 
 
-float ArmPIDSubsystem::VoltageToAngle(float voltage)
+float ArmPIDSubsystem::PotVoltageToAngle(float voltage)
 {
-	return (voltage - potFloor) / VOLTS_PER_DEGREE_FOR_5K_POT;
+	// This converts a reading of voltage off of the pot into its 
+	// associated shooting arm angle.
+	return ((voltage - potOrigin) / VOLTS_PER_DEGREE_FOR_5K_POT) + MAX_ANGLE;
 }
-
-
 
 void ArmPIDSubsystem::ManualMoveArmControl(float y){
 	bool limitHit = false;
@@ -195,36 +199,33 @@ void ArmPIDSubsystem::ManualMoveArmControl(float y){
 		y = 0;
 	}
 	
-	
 	armSpeedController->Set(y);
 }
 
 static const double HOME_FINDING_SPEED = 1.0; //0.6;
     
-void ArmPIDSubsystem::findHomePosition(bool forceFind) {
+void ArmPIDSubsystem::FindOriginPosition(bool forceFind) {
         
         // Check to see if the pot floor has already been
         // found.  Don't check for it again.
-        if (!forceFind && potFloorCheckComplete) {
+        if (!forceFind && potOriginCheckComplete) {
             return;
         }
         
-        if (!PollLowerArmLimit()) {
+        if (!PollUpperArmLimit()) {
             armSpeedController->Set(HOME_FINDING_SPEED);
-            while (!PollLowerArmLimit()) {
+            while (!PollUpperArmLimit()) {
 //                System.out.println("Moving the shooter down.");
             }
             
             armSpeedController->Set(0.0);
         }
         
-        potFloor = ReturnPIDInput();
-        //System.out.println("potFloor = " + potFloor);
-        potFloorCheckComplete = true;
-        //updateSmartDashboardPotentReading(potFloor);
+        potOrigin = ReturnPIDInput();
+        //System.out.println("potOrigin = " + potOrigin);
+        potOriginCheckComplete = true;
+        //updateSmartDashboardPotentReading(potOrigin);
      }
-
-
 
     float ArmPIDSubsystem::GetPotentiometerReading() {
         double voltage = ReturnPIDInput();

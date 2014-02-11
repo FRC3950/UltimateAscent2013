@@ -32,7 +32,7 @@ class ArmPIDSubsystem: public PIDSubsystem {
 	void SetPIDSubsystem(bool enable);
 	void ManualMoveArmControl(float y);
 	float SetArmAngle(float angle, bool useErrorCorrection = false);
-	void findHomePosition(bool forceFind);
+	void FindOriginPosition(bool forceFind);
 	bool HasReachedTargetVoltage(float pidTargetVoltage);
 	float GetPotentiometerReading();
 
@@ -46,13 +46,13 @@ protected:
 	bool PollUpperArmLimit();
 	bool PollLowerArmLimit();
 	float AngleToVoltage(float angle);
-	float VoltageToAngle(float voltage);
+	float PotVoltageToAngle(float voltage);
 	
 	bool upperArmLimitHit;
 	bool lowerArmLimitHit;
 	bool pidEnabled;
-	float potFloor;
-	bool potFloorCheckComplete;
+	float potOrigin;
+	bool potOriginCheckComplete;
 
 
 };

@@ -9,25 +9,26 @@
 // it from being updated in th future.
 
 
-
-#ifndef FIRE_H
-#define FIRE_H
-
-#include "Commands/CommandGroup.h"
-#include "Launch.h"
-#include "CockShooter.h"
-#include "BallScrewUp.h"
+#ifndef ROLL_BALL_IN_H
+#define ROLL_BALL_IN_H
 
 
+#include "Commands/Subsystem.h"
+#include "../Robot.h"
 
 /**
  *
  *
  * @author ExampleAuthor
  */
-class Fire: public CommandGroup {
-public:	
-	Fire();
+class RollBallIn: public Command {
+public:
+	RollBallIn();
+	virtual void Initialize();
+	virtual void Execute();
+	virtual bool IsFinished();
+	virtual void End();
+	virtual void Interrupted();
 };
 
 #endif

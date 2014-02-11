@@ -13,6 +13,10 @@
 #include "Fire.h"
 
 Fire::Fire() {
+	AddSequential(new Launch());
+	AddSequential(new CockShooter());
+	AddSequential(new BallScrewUp());
+	
 	// Add Commands here:
 	// e.g. AddSequential(new Command1());
 	//      AddSequential(new Command2());
