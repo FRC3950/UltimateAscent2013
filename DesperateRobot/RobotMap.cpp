@@ -57,6 +57,7 @@ void RobotMap::init() {
     	lw->AddSensor("DriveSubsystem", "Gyro 1", driveSubsystemGyro1);
     	driveSubsystemGyro1->SetSensitivity(0.007);
 
+#if defined(NOT_YET)    	
 	armPIDSubsystemPotentiometer1 = new AnalogChannel(1, 4);
 	lw->AddSensor("Arm PID Subsystem", "Potentiometer 1", armPIDSubsystemPotentiometer1);
 	
@@ -89,5 +90,5 @@ void RobotMap::init() {
     
 	intakeSubsystemIntakeWheels = new Victor(1, 6);
 	lw->AddActuator("Intake Subsystem", "Intake Wheels", (Victor*) intakeSubsystemIntakeWheels);
-	
+#endif	
 }

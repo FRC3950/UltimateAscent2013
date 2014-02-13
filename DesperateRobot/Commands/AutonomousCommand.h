@@ -15,6 +15,9 @@
 
 #include "Commands/Subsystem.h"
 #include "../Robot.h"
+#include "OpenAndFire.h"
+#include "Commands/CommandGroup.h"
+
 
 /**
  *
@@ -29,6 +32,10 @@ public:
 	virtual bool IsFinished();
 	virtual void End();
 	virtual void Interrupted();
+	
+private:
+	Command *openAndFire;
+	
 };
 
 #endif
