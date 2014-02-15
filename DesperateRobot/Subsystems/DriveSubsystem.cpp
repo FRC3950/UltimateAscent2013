@@ -8,6 +8,7 @@
 // update. Deleting the comments indicating the section will prevent
 // it from being updated in th future.
 #include "DriveSubsystem.h"
+#include "../Logger.h"
 #include "../UtilFun.h"
 #include "../Robotmap.h"
 #include "../Commands/DriveCommand.h"
@@ -65,12 +66,12 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
 	// Uncomment this if you whant to disable the gyro. 
 	//gyroAngle = 0.0;
 	
-	printf("DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
+	Logger::GetInstance()->Log(Logger::kINFO, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
 	robotDriveMecanum->MecanumDrive_Cartesian(x, y, -twist, gyroAngle);
 }
 
 void DriveSubsystem::ResetGyro(){
 	gyro1->Reset();
-	printf ("DriveSubsystem: Reset Gyro\n");
+	Logger::GetInstance()->Log(Logger::kINFO, "DriveSubsystem: Reset Gyro");
 }
 

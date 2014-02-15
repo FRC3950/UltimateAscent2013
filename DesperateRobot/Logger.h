@@ -18,11 +18,13 @@ public:
    } MessageType;
    
    static Logger* GetInstance(bool logToConsole = false, bool logToFile = false);
+
    virtual ~Logger();
    
    void Log(MessageType type, const char* message, ...);
-   void SetIsLogging(bool isLogging);
-   bool IsLogging();
+   
+   void SetIsLogging(bool isLogging) { m_isLogging = isLogging; }
+   bool IsLogging() { return m_isLogging; }
 
 protected:
    Logger(bool logToConsole, bool logToFile);
@@ -35,5 +37,14 @@ private:
    bool m_isLogging;
 };
 
+inline Logger* Logger::GetInstance(bool logToConsole /*= false*/, bool logToFile /*= false*/)
+{
+   if (m_instance == NULL)
+   {
+      m_instance = new Logger(logToConsole, logToFile);
+   }
+   
+   return m_instance;
+}
 
 #endif
