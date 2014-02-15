@@ -137,23 +137,4 @@ void Logger::LogToConsole(const char *msgTypeStr, const char *message, va_list a
     printf("\n");
 }
 
-void Logger::SetIsLogging(bool isLogging)
-{
-   m_isLogging = isLogging;
-}
-
-bool Logger::IsLogging()
-{
-   return m_isLogging;
-}
-
-Logger* Logger::GetInstance(bool logToConsole, bool logToFile)
-{
-   if (m_instance == NULL)
-   {
-      m_instance = new Logger(logToConsole, logToFile);
-   }
-   
-   return m_instance;
-}
 

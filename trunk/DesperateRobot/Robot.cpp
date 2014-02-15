@@ -28,7 +28,7 @@ Robot::Robot()
 	// Pass true as the second parameter to log to a file.
 	// By default logging is off, hence default paramters that are both false.
 	// Nothing is passed for the default case.
-	Logger *logger = Logger::GetInstance();
+	Logger *logger = Logger::GetInstance(true);
 	logger->Log(Logger::kINFO, "Robot class constructor!");
 }
 void Robot::RobotInit() {
@@ -87,8 +87,7 @@ void Robot::TeleopInit() {
 }
 	
 void Robot::TeleopPeriodic() {
-	if (autonomousCommand != NULL)
-		Scheduler::GetInstance()->Run();
+	Scheduler::GetInstance()->Run();
 }
 void Robot::TestPeriodic() {
 	lw->Run();
