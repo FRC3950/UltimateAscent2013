@@ -40,8 +40,7 @@ public:
 	
 	bool IsClawOpen() const {return clawIsOpen;}
 	
-	void RollBallIn(float y);
-	void RollBallOut(float y);
+	void SetIntakeWheelsSpeed(float y);
 };
 
 #endif

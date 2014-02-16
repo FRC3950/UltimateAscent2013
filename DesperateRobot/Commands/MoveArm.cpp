@@ -15,8 +15,7 @@ void MoveArm::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void MoveArm::Execute() {
-	//Robot.shootingScrew.shooterManualSpeed(Robot.oi.getShooterSpeed());
-	Robot::armPIDSubsystem->ManualMoveArmControl(Robot::oi->GetArmSpeed());
+	Robot::armPIDSubsystem->ManualMoveArmControl(-Robot::oi->GetArmSpeed());
 }
 
 // Make this return true when this Command no longer needs to run execute()

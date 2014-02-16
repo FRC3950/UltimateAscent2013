@@ -21,10 +21,9 @@
 Logger* Logger::m_instance = NULL;
 
 Logger::Logger(bool logToConsole, bool logToFile)
-	: m_logToConsole(logToConsole)
+	: m_loggingLevel(kERROR),
+	  m_logToConsole(logToConsole)
 {
-   SetIsLogging(true);
-   
    if (logToFile)
    {
 	   // Must be called before file access to the CRIO is allowed.
@@ -79,7 +78,7 @@ static const char *INFO_MSG = "INFO\t";
 
 void Logger::Log(MessageType type, const char* message, ...)
 {
-   if (IsLogging())
+   if (IsLogging(type))
    {
 	   const char *msgType;
 	   

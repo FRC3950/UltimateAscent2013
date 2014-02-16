@@ -10,6 +10,7 @@
 
 
 #include "RollBallOut.h"
+#include "../Logger.h"
 
 
 RollBallOut::RollBallOut() {
@@ -27,15 +28,16 @@ void RollBallOut::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void RollBallOut::Execute() {
+	Logger::GetInstance()->Log(Logger::kWARNING, "RollBallOut::Execute() called.");
 	
-	Robot::intakeSubsystem->RollBallOut(-1.0); // Roll ball out at sepcified speed
-											   // negative should be out
+	Robot::intakeSubsystem->SetIntakeWheelsSpeed(1.0); // Roll ball out at sepcified speed
+											   	   	   // positive should be out
 	
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool RollBallOut::IsFinished() {
-	return false;
+	return true;
 }
 
 // Called once after isFinished returns true
