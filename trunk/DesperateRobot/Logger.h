@@ -12,9 +12,9 @@ class Logger
 public:
    typedef enum 
    {
-      kERROR = 0, 
+	  kINFO = 0,
       kWARNING = 1, 
-      kINFO = 2
+      kERROR = 2 
    } MessageType;
    
    static Logger* GetInstance(bool logToConsole = false, bool logToFile = false);
@@ -23,8 +23,8 @@ public:
    
    void Log(MessageType type, const char* message, ...);
    
-   void SetIsLogging(bool isLogging) { m_isLogging = isLogging; }
-   bool IsLogging() { return m_isLogging; }
+   void SetLoggingLevel(MessageType newLevel) { m_loggingLevel = newLevel; }
+   bool IsLogging(MessageType type) { return type >= m_loggingLevel; }
 
 protected:
    Logger(bool logToConsole, bool logToFile);
@@ -33,8 +33,8 @@ protected:
 private:
    static Logger *m_instance;
    FILE *m_logFile;
+   MessageType m_loggingLevel;
    bool m_logToConsole;
-   bool m_isLogging;
 };
 
 inline Logger* Logger::GetInstance(bool logToConsole /*= false*/, bool logToFile /*= false*/)

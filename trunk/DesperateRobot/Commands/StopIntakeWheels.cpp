@@ -9,11 +9,11 @@
 // it from being updated in th future.
 
 
-#include "RollBallIn.h"
+#include "StopIntakeWheels.h"
 #include "../Logger.h"
 
 
-RollBallIn::RollBallIn() {
+StopIntakeWheels::StopIntakeWheels() {
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
 	Requires(Robot::intakeSubsystem);
@@ -22,29 +22,27 @@ RollBallIn::RollBallIn() {
 }
 
 // Called just before this Command runs the first time
-void RollBallIn::Initialize() {
+void StopIntakeWheels::Initialize() {
 	
 }
 
 // Called repeatedly when this Command is scheduled to run
-void RollBallIn::Execute() {
-	Logger::GetInstance()->Log(Logger::kWARNING, "RollBallIn::Execute() called.");
-	Robot::intakeSubsystem->SetIntakeWheelsSpeed(-1.0); 	// Roll ball out at sepcified speed
-											 	 	 		// negative should be in
-}
+void StopIntakeWheels::Execute() {
+	Logger::GetInstance()->Log(Logger::kWARNING, "StopShooterWheels::Execute() called.");
+	Robot::intakeSubsystem->SetIntakeWheelsSpeed(0.0); }
 
 // Make this return true when this Command no longer needs to run execute()
-bool RollBallIn::IsFinished() {
+bool StopIntakeWheels::IsFinished() {
 	return true;
 }
 
 // Called once after isFinished returns true
-void RollBallIn::End() {
+void StopIntakeWheels::End() {
 	
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void RollBallIn::Interrupted() {
+void StopIntakeWheels::Interrupted() {
 
 }

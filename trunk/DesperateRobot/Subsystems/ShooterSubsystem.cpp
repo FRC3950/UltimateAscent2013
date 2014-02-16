@@ -68,7 +68,7 @@ bool ShooterSubsystem::CheckLowerLimitSwitch()
 
 void ShooterSubsystem::ReleaseTrigger()
 {
-	triggerSolenoid->Set(DoubleSolenoid::kReverse);
+	triggerSolenoid->Set(true);
 	Wait(0.2);
-	triggerSolenoid->Set(DoubleSolenoid::kForward);
+	triggerSolenoid->Set(false);
 }
