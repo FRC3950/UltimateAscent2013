@@ -27,6 +27,7 @@ void Launch::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void Launch::Execute() {
 	Robot::shooterSubsystem->ReleaseTrigger();
+	Wait(0.5);
 }
 
 // Make this return true when this Command no longer needs to run execute()

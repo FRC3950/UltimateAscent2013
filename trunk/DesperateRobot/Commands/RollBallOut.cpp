@@ -11,6 +11,7 @@
 
 #include "RollBallOut.h"
 #include "../Logger.h"
+#include "../LoggingComponentDefs.h"
 
 
 RollBallOut::RollBallOut() {
@@ -28,7 +29,7 @@ void RollBallOut::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void RollBallOut::Execute() {
-	Logger::GetInstance()->Log(Logger::kWARNING, "RollBallOut::Execute() called.");
+	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kWARNING, "RollBallOut::Execute() called.");
 	
 	Robot::intakeSubsystem->SetIntakeWheelsSpeed(1.0); // Roll ball out at sepcified speed
 											   	   	   // positive should be out

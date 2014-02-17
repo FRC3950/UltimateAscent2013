@@ -1,5 +1,6 @@
 #include "MoveArm.h"
 #include "../Subsystems/ArmPIDSubsystem.h"
+#include "../ShootingTargetDefs.h"
 
 MoveArm::MoveArm() {
 	// Use requires() here to declare subsystem dependencies
@@ -10,12 +11,13 @@ MoveArm::MoveArm() {
 
 // Called just before this Command runs the first time
 void MoveArm::Initialize() {
-	
+	Robot::armPIDSubsystem->SetReadyToFireField(false);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void MoveArm::Execute() {
 	Robot::armPIDSubsystem->ManualMoveArmControl(-Robot::oi->GetArmSpeed());
+	Robot::armPIDSubsystem->UpdateReadyToFireField(TargetShooterSetPoint);
 }
 
 // Make this return true when this Command no longer needs to run execute()

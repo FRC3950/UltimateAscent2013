@@ -9,6 +9,7 @@
 // it from being updated in th future.
 #include "DriveSubsystem.h"
 #include "../Logger.h"
+#include "../LoggingComponentDefs.h"
 #include "../UtilFun.h"
 #include "../Robotmap.h"
 #include "../Commands/DriveCommand.h"
@@ -72,6 +73,6 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
 
 void DriveSubsystem::ResetGyro(){
 	gyro1->Reset();
-	Logger::GetInstance()->Log(Logger::kINFO, "DriveSubsystem: Reset Gyro");
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: Reset Gyro");
 }
 

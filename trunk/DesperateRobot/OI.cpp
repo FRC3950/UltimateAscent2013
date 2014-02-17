@@ -14,6 +14,8 @@
 
 #include "SmartDashboard/SmartDashboard.h"
 #include "Commands/AutonomousCommand.h"
+#include "Commands/BallScrewUp.h"
+#include "Commands/CockShooter.h"
 #include "Commands/DriveCommand.h"
 #include "Commands/ResetGyroCommand.h"
 #include "Commands/LaunchAngle.h"
@@ -25,6 +27,7 @@
 #include "Commands/StopIntakeWheels.h"
 #include "Commands/FindArmPotOrigin.h"
 #include "Commands/DisableArmPIDMode.h"
+#include "Commands/Fire.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -63,6 +66,9 @@ OI::OI() {
 	
 	disableArmPIDMode = new JoystickButton(yellowJoystick, 9);
 	disableArmPIDMode->WhenPressed(new DisableArmPIDMode());
+	
+	FireButton = new JoystickButton(yellowJoystick, 7);
+	FireButton->WhenPressed(new Fire());
 	// Add SmartDashboard.
 	SmartDashboard::PutData("Drive Command", new DriveCommand());
 	SmartDashboard::PutData("Reset Gyro Command", new ResetGyroCommand());
@@ -72,6 +78,10 @@ OI::OI() {
 	SmartDashboard::PutData("Toggle Claw", new ToggleClaw());
 	SmartDashboard::PutData("Find Arm Pot Origin", new FindArmPotOrigin());
 	SmartDashboard::PutData("Goto Launch Angle", new LaunchAngle());
+	SmartDashboard::PutData("Ball Screw Up", new BallScrewUp());
+	SmartDashboard::PutData("Cock Shooter", new CockShooter());
+	SmartDashboard::PutData("Launch", new Launch());
+	
 	
 #if defined(NOT_YET)
 	launchAngleButton = new JoystickButton(yellowJoystick, 7);

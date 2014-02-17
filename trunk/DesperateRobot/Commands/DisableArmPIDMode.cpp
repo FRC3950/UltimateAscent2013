@@ -1,6 +1,7 @@
 #include "DisableArmPIDMode.h"
 #include "../Subsystems/ArmPIDSubsystem.h"
 #include "../Logger.h"
+#include "../LoggingComponentDefs.h"
 
 DisableArmPIDMode::DisableArmPIDMode()
 {
@@ -18,7 +19,7 @@ void DisableArmPIDMode::Initialize() {
 // Called repeatedly when this Command is scheduled to run
 void DisableArmPIDMode::Execute() {
 	Robot::armPIDSubsystem->SetPIDSubsystem(false);
-	Logger::GetInstance()->Log(Logger::kWARNING, "DisableArmPIDMode : PID Mode Disabled.");
+	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kWARNING, "DisableArmPIDMode : PID Mode Disabled.");
 }
 
 // Make this return true when this Command no longer needs to run execute()

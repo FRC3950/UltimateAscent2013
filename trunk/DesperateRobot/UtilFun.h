@@ -14,4 +14,9 @@ inline float ZeroIfInRangeInclusive(float value, float min, float max) {
 	return value;
 }
 
+inline bool InRangeInclusive(float value, float min, float max) {
+	return((value >= min) && (value <= max));
+		
+}
+
 #endif // UTIL_FUN_H
