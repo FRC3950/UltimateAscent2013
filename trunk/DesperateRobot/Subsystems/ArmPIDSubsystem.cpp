@@ -18,6 +18,7 @@
 
 #define ARM_UPPER_LIMIT_SWITCH_IN 1
 #define ARM_LOWER_LIMIT_SWITCH_IN 1
+#define POLL_THE_POT 1
 
 static const double Kp = 1.0;
 static const double Ki = 0.0;
@@ -91,12 +92,12 @@ void ArmPIDSubsystem::UsePIDOutput(double output) {
 		return;
 	}
 	
-	if ((output > 0.0) && PollUpperArmLimit())
+	if ((output < 0.0) && PollUpperArmLimit())
 	{
 		output = 0.0;
 	}
 	
-	else if ((output < 0.0) && PollLowerArmLimit())
+	else if ((output > 0.0) && PollLowerArmLimit())
 	{
 		output = 0.0;
 	}
@@ -152,6 +153,29 @@ void ArmPIDSubsystem::InitDefaultCommand() {
 	SetDefaultCommand(new MoveArm());
 	
 }
+
+float ArmPIDSubsystem::GetArmAngle()
+{
+	float currVoltage = GetPotentiometerReading();
+	
+	return this->PotVoltageToAngle(currVoltage);
+}
+
+float ArmPIDSubsystem::SetRelativePIDTarget(float target)
+{
+
+	if (!pidEnabled)
+	{
+		SetPIDSubsystem(true);
+	}
+	
+	float pidInput = target + potOrigin;
+	
+	SetSetpoint(pidInput);
+	
+	return pidInput;
+}
+
 static const float MAX_ANGLE = 90.0;
 static const float MIN_ANGLE = 0.0;
 	
@@ -175,6 +199,11 @@ float ArmPIDSubsystem::SetArmAngle(float angle, bool useErrorCorrection)
 	}
 	
 	float pidInput = AngleToVoltage(angle);
+
+	if (!pidEnabled)
+	{
+		SetPIDSubsystem(true);
+	}
 	
 	SetSetpoint(pidInput);
 	
@@ -183,18 +212,21 @@ float ArmPIDSubsystem::SetArmAngle(float angle, bool useErrorCorrection)
 }
 
 
-static const float VOLTS_PER_DEGREE_FOR_5K_POT = 0.0119; // should still be calibrated as neeeded
-static const float MAX_POTENT_VOLTAGE = 1.6;
+static const float VOLTS_PER_DEGREE_FOR_5K_POT = 0.0156; // should still be calibrated as neeeded
+static const float MAX_POTENT_VOLTAGE = 2.6217;			 // When at 0 degrees		
+static const float MIN_POTENT_VOLTAGE = 1.2206;			 // When at 90 degrees
 
 float ArmPIDSubsystem::AngleToVoltage(float angle)
 {
 	float complementAngle = MAX_ANGLE - angle;
 	
-	float result = potOrigin - (complementAngle * VOLTS_PER_DEGREE_FOR_5K_POT);
+//	float result = potOrigin - (complementAngle * VOLTS_PER_DEGREE_FOR_5K_POT);
+	float result = potOrigin + (complementAngle * VOLTS_PER_DEGREE_FOR_5K_POT);
 	if (result > MAX_POTENT_VOLTAGE)
 	{
 		result = MAX_POTENT_VOLTAGE;
 	}
+
 	
 	return result;
 }
@@ -204,11 +236,15 @@ float ArmPIDSubsystem::PotVoltageToAngle(float voltage)
 {
 	// This converts a reading of voltage off of the pot into its 
 	// associated shooting arm angle.
-	return ((voltage - potOrigin) / VOLTS_PER_DEGREE_FOR_5K_POT) + MAX_ANGLE;
+	// return ((voltage - potOrigin) / VOLTS_PER_DEGREE_FOR_5K_POT) + MAX_ANGLE;
+	//return ((voltage + potOrigin) / VOLTS_PER_DEGREE_FOR_5K_POT) + MAX_ANGLE;
+	float complementAngle = (voltage - potOrigin) / VOLTS_PER_DEGREE_FOR_5K_POT;
+	return MAX_ANGLE - complementAngle;
 }
 
 static const float VOLTAGE_TOLERANCE_MIN = -0.25;
 static const float VOLTAGE_TOLERANCE_MAX = 0.25;
+static const float VOLTAGE_SCALE_FACTOR = .65;
 
 void ArmPIDSubsystem::ManualMoveArmControl(float voltage) {
 	Logger::GetInstance()->Log(Logger::kINFO, "ArmPIDSubsystem::ManualMoverArmControl entered.");
@@ -221,7 +257,7 @@ void ArmPIDSubsystem::ManualMoveArmControl(float voltage) {
 	}
 
 	Logger::GetInstance()->Log(Logger::kINFO, "ArmPIDSubsystem::ManualMoverArmControl original setting speed %f.", voltage);
-
+	voltage *= VOLTAGE_SCALE_FACTOR;
 	voltage = ZeroIfInRangeInclusive(voltage, VOLTAGE_TOLERANCE_MIN, VOLTAGE_TOLERANCE_MAX);
 	
 	if (voltage != 0)
@@ -241,63 +277,89 @@ void ArmPIDSubsystem::ManualMoveArmControl(float voltage) {
 		}
 	}
 
-	Logger::GetInstance()->Log(Logger::kWARNING, "ArmPIDSubsystem::ManualMoverArmControl Setting voltage %f.", voltage);
+	if (Logger::GetInstance()->IsLogging(Logger::kWARNING))
+	{
+		 if ((voltage != 0.0) || ((voltage == 0.0) && (armSpeedController->Get() != 0.0)))
+		 {
+			 Logger::GetInstance()->Log(Logger::kWARNING, "ArmPIDSubsystem::ManualMoverArmControl Setting voltage %f.", voltage);
+		 }
+	}
+	
+#if defined(POLL_THE_POT)
+	double potVoltage = GetPotentiometerReading();
+	Logger::GetInstance()->Log(Logger::kINFO, "*** Arm POT value = %g ***", potVoltage);
+	SmartDashboard::PutNumber("Arm Pot", potVoltage);
 
+#endif
 	armSpeedController->Set(voltage);
 }
 
-static const double HOME_FINDING_SPEED = -1.0; //0.6;
-    
+static const double POT_ORIGIN_FINDING_SPEED = -0.6; //0.6;
+static const double POT_ORIGIN_READ_DELAY_IN_SECS = 0.5;
 void ArmPIDSubsystem::FindOriginPosition(bool forceFind) {
         
-        // Check to see if the pot floor has already been
-        // found.  Don't check for it again.
-        if (!forceFind && potOriginCheckComplete) {
-            return;
-        }
-        
-        if (!PollUpperArmLimit()) {
-            armSpeedController->Set(HOME_FINDING_SPEED);
-            while (!PollUpperArmLimit()) 
-            {
-            }
-            
-            armSpeedController->Set(0.0);
-        }
-        
-        potOrigin = ReturnPIDInput();
-        //System.out.println("potOrigin = " + potOrigin);
-        potOriginCheckComplete = true;
-        //updateSmartDashboardPotentReading(potOrigin);
-     }
+	// Check to see if the pot floor has already been
+	// found.  Don't check for it again.
+	if (!forceFind && potOriginCheckComplete) 
+	{
+		Logger::GetInstance()->Log(Logger::kWARNING, "*** Finding Arm POT Origin - Already found. Ignoring. ***");
+		
+		return;
+	}
+	
+	SetPIDSubsystem(false);
+	
+	Logger::GetInstance()->Log(Logger::kWARNING, "*** Finding Arm POT Origin ***");
+	int count = 0;
+	
+	if (!PollUpperArmLimit()) {
+		armSpeedController->Set(POT_ORIGIN_FINDING_SPEED);
+		while (!PollUpperArmLimit()) 
+		{
+			if ((++count % 4) == 0) {
+				Logger::GetInstance()->Log(Logger::kWARNING, "*** Arm POT value = %f ***", potentiometer1->GetVoltage());
+			}
+		}
+		
+		armSpeedController->Set(0.0);
+		
+		// Delay reading the pot voltage to give things a chance to stabilize.
+		Wait(POT_ORIGIN_READ_DELAY_IN_SECS);
+	}
+	
+	potOrigin = (float)potentiometer1->GetVoltage();
+	Logger::GetInstance()->Log(Logger::kWARNING, "*** Arm POT Origin set to %f ***", potOrigin);
+	potOriginCheckComplete = true;
+	SmartDashboard::PutNumber("Pot Origin", potOrigin);
+ }
 
-    float ArmPIDSubsystem::GetPotentiometerReading() {
-        double voltage = ReturnPIDInput();
-        
-        /*  // Enable this code for error resolution in the potentiometer
-        if (voltage <= REPORT_POTENT_VOLTAGE_FLOOR) {
-            ++numPotReadingsBelowFloor;
-            
-            if (numPotReadingsBelowFloor >= NUM_SAMPLES_BELOW_FLOOR_LIMIT) {
-                //updateSmartDashboardPotentReading(voltage);
-            }
-        }
-        else {
-            if (numPotReadingsBelowFloor > 0) {
-                //updateSmartDashboardPotentReading(voltage);
-                numPotReadingsBelowFloor = 0;
-            }
-        }
-        */
-        return voltage;
-    }
+float ArmPIDSubsystem::GetPotentiometerReading() {
+	double voltage = (float)potentiometer1->GetVoltage();
+	
+	/*  // Enable this code for error resolution in the potentiometer
+	if (voltage <= REPORT_POTENT_VOLTAGE_FLOOR) {
+		++numPotReadingsBelowFloor;
+		
+		if (numPotReadingsBelowFloor >= NUM_SAMPLES_BELOW_FLOOR_LIMIT) {
+			//updateSmartDashboardPotentReading(voltage);
+		}
+	}
+	else {
+		if (numPotReadingsBelowFloor > 0) {
+			//updateSmartDashboardPotentReading(voltage);
+			numPotReadingsBelowFloor = 0;
+		}
+	}
+	*/
+	return voltage;
+}
 
 
-
+static const float PID_TARGET_EPSILON = 0.01;
 bool ArmPIDSubsystem::HasReachedTargetVoltage(float pidTargetVoltage)
 {
 	float actualPosition = GetPotentiometerReading();
-	return fabs(actualPosition - pidTargetVoltage) <= .025;
+	return fabs(actualPosition - pidTargetVoltage) <= PID_TARGET_EPSILON;
 }
 
 

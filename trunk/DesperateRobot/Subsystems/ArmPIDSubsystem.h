@@ -31,7 +31,12 @@ class ArmPIDSubsystem: public PIDSubsystem {
 	void InitDefaultCommand();
 	void SetPIDSubsystem(bool enable);
 	void ManualMoveArmControl(float voltage);
+
+	float SetRelativePIDTarget(float target);
+	
 	float SetArmAngle(float angle, bool useErrorCorrection = false);
+	float GetArmAngle();
+
 	void FindOriginPosition(bool forceFind);
 	bool HasReachedTargetVoltage(float pidTargetVoltage);
 	float GetPotentiometerReading();
