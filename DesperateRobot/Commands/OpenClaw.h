@@ -23,12 +23,14 @@
  */
 class OpenClaw: public Command {
 public:
-	OpenClaw();
+	OpenClaw(bool delayActive);
 	virtual void Initialize();
 	virtual void Execute();
 	virtual bool IsFinished();
 	virtual void End();
 	virtual void Interrupted();
+private:
+	bool delay;
 };
 
 #endif
