@@ -68,7 +68,7 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
 	//gyroAngle = 0.0;
 	
 	//Logger::GetInstance()->Log(Logger::kINFO, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
-	robotDriveMecanum->MecanumDrive_Cartesian(x, y, -twist, gyroAngle);
+	robotDriveMecanum->MecanumDrive_Cartesian(x, y, twist, gyroAngle);
 }
 
 void DriveSubsystem::ResetGyro(){
