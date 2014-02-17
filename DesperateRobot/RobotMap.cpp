@@ -54,8 +54,8 @@ void RobotMap::init() {
         driveSubsystemRobotDriveMecanum->SetExpiration(0.1);
         driveSubsystemRobotDriveMecanum->SetSensitivity(0.5);
         driveSubsystemRobotDriveMecanum->SetMaxOutput(1.0);
-        driveSubsystemRobotDriveMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-        driveSubsystemRobotDriveMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+        driveSubsystemRobotDriveMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
+        driveSubsystemRobotDriveMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
         
     	lw->AddSensor("DriveSubsystem", "Gyro 1", driveSubsystemGyro1);
     	driveSubsystemGyro1->SetSensitivity(0.007);
