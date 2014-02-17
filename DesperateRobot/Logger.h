@@ -1,6 +1,7 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#include <stdarg.h>
 #include <stdio.h>
 
 //************************************************
@@ -21,19 +22,40 @@ public:
 
    virtual ~Logger();
    
-   void Log(MessageType type, const char* message, ...);
-   
    void SetLoggingLevel(MessageType newLevel) { m_loggingLevel = newLevel; }
-   bool IsLogging(MessageType type) { return type >= m_loggingLevel; }
+   MessageType GetLoggingLevel() const { return m_loggingLevel; }
+   
+   void SetLoggingMask(unsigned int newMask) { m_loggingMask = newMask; }
+   unsigned int GetLoggingMask() const { return m_loggingMask; }
+   
+   bool IsLogging(unsigned int componentSet, MessageType type) 
+   { 
+	   return ((componentSet & m_loggingMask) && (type >= m_loggingLevel)); 
+   }
 
+   void Log(unsigned int componentSet, MessageType type, const char* message, ...)
+   {
+	   if (IsLogging(componentSet, type))
+	   {
+		  va_list args;
+		  va_start(args, message);
+
+		  LogInternal(type, message, args);
+		  
+		  va_end(args);
+	   }
+   }
+   
 protected:
    Logger(bool logToConsole, bool logToFile);
+   void LogInternal(MessageType type, const char* message, va_list args);
    void LogToFile(const char *msgType, const char *message, va_list args);
    void LogToConsole(const char *msgType, const char *message, va_list args);
 private:
    static Logger *m_instance;
    FILE *m_logFile;
    MessageType m_loggingLevel;
+   unsigned int m_loggingMask;
    bool m_logToConsole;
 };
 

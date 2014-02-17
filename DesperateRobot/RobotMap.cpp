@@ -70,7 +70,7 @@ void RobotMap::init() {
 	lw->AddSensor("Arm PID Subsystem", "lowerArmLimit", armPIDSubsystemlowerArmLimit);
 	
 	intakeSubsystemClawSolenoid = new DoubleSolenoid(1, 1, 2);
-	lw->AddActuator("Shooter Subsystem", "Claw Solenoid", intakeSubsystemClawSolenoid);
+	lw->AddActuator("Intake Subsystem", "Claw Solenoid", intakeSubsystemClawSolenoid);
 	
 	pneumaticsCompressor = new Compressor(1, 5, 1, 1);
 	lw->AddActuator("Pnumatics Subsystem", "Compressor", pneumaticsCompressor);
@@ -83,8 +83,6 @@ void RobotMap::init() {
 	armPIDSubsystemPotentiometer1 = new AnalogChannel(1, 4);
 	lw->AddSensor("Arm PID Subsystem", "Potentiometer 1", armPIDSubsystemPotentiometer1);
 	
-#if NOT_YET
-
 	shooterSubsystemUpperLimitSwitch = new DigitalInput(1, 3);
 	lw->AddSensor("Shooter Subsystem", "Upper Limit Switch", shooterSubsystemUpperLimitSwitch);
 		
@@ -95,7 +93,5 @@ void RobotMap::init() {
 	lw->AddActuator("Shooter Subsystem", "Shooter Motor", (Victor*) shooterSubsystemShooterMotor);
 		
 	shooterSubsystemTriggerSolenoid = new Solenoid(1, 3);
-	lw->AddActuator("Shooter Subsystem", "Trigger Solenoid", shooterSubsystemTriggerSolenoid);
-		
-#endif	
+	lw->AddActuator("Shooter Subsystem", "Trigger Solenoid", shooterSubsystemTriggerSolenoid);	
 }

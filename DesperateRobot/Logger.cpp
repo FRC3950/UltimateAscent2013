@@ -9,6 +9,7 @@
  * me to write quickly.
  */        
 #include "Logger.h"
+#include <limits.h>
 #include <time.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -22,6 +23,7 @@ Logger* Logger::m_instance = NULL;
 
 Logger::Logger(bool logToConsole, bool logToFile)
 	: m_loggingLevel(kERROR),
+	  m_loggingMask(UINT_MAX),
 	  m_logToConsole(logToConsole)
 {
    if (logToFile)
@@ -76,6 +78,8 @@ static const char *ERROR_MSG = "ERROR\t";
 static const char *WARN_MSG = "WARN\t";
 static const char *INFO_MSG = "INFO\t";
 
+#if defined(LOGGER_NOT_NEEDED)
+
 void Logger::Log(MessageType type, const char* message, ...)
 {
    if (IsLogging(type))
@@ -114,6 +118,39 @@ void Logger::Log(MessageType type, const char* message, ...)
       
       va_end(args);
    }
+}
+#endif
+
+void Logger::LogInternal(MessageType type, const char* message, va_list args)
+{
+	const char *msgType;
+	   
+	// First print the message type
+	switch (type)
+	{
+	case kERROR:
+	  msgType = ERROR_MSG;
+	  break;
+	case kWARNING:
+	  msgType = WARN_MSG;
+	  break;
+	case kINFO:
+	  msgType = INFO_MSG;
+	  break;
+	default:
+	  msgType = INFO_MSG;
+	  break;
+	}
+	
+	if (m_logFile != NULL )
+	{
+		LogToFile(msgType, message, args);
+	}
+	
+	if (m_logToConsole)
+	{
+		LogToConsole(msgType, message, args);
+	}
 }
 
 void Logger::LogToFile(const char *msgTypeStr, const char* message, va_list args)

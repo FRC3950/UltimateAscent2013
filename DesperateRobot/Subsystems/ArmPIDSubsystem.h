@@ -32,15 +32,17 @@ class ArmPIDSubsystem: public PIDSubsystem {
 	void SetPIDSubsystem(bool enable);
 	void ManualMoveArmControl(float voltage);
 
+	float SetAbsolutePIDTarget(float target);
 	float SetRelativePIDTarget(float target);
 	
-	float SetArmAngle(float angle, bool useErrorCorrection = false);
-	float GetArmAngle();
-
 	void FindOriginPosition(bool forceFind);
 	bool HasReachedTargetVoltage(float pidTargetVoltage);
 	float GetPotentiometerReading();
 
+	void SetReadyToFireField(bool setting);
+	void UpdateReadyToFireField(float targetVoltage);
+	void UpdateReadyToFireField(float targetVoltage, float currVoltage);
+	
 protected:
 	// These are overridden base class methods.
 	virtual double ReturnPIDInput();

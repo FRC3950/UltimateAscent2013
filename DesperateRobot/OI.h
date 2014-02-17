@@ -27,6 +27,7 @@ private:
 	JoystickButton* resetArmPotOriginButton;
 	JoystickButton* gotoLaunchAngle;
 	JoystickButton* disableArmPIDMode;
+	JoystickButton* FireButton;
 public:
 	OI();
  

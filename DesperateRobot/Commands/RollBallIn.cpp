@@ -11,6 +11,7 @@
 
 #include "RollBallIn.h"
 #include "../Logger.h"
+#include "../LoggingComponentDefs.h"
 
 
 RollBallIn::RollBallIn() {
@@ -28,7 +29,7 @@ void RollBallIn::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void RollBallIn::Execute() {
-	Logger::GetInstance()->Log(Logger::kWARNING, "RollBallIn::Execute() called.");
+	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kWARNING, "RollBallIn::Execute() called.");
 	Robot::intakeSubsystem->SetIntakeWheelsSpeed(-1.0); 	// Roll ball out at sepcified speed
 											 	 	 		// negative should be in
 }

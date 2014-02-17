@@ -11,6 +11,7 @@
 
 #include "StopIntakeWheels.h"
 #include "../Logger.h"
+#include "../LoggingComponentDefs.h"
 
 
 StopIntakeWheels::StopIntakeWheels() {
@@ -28,7 +29,7 @@ void StopIntakeWheels::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void StopIntakeWheels::Execute() {
-	Logger::GetInstance()->Log(Logger::kWARNING, "StopShooterWheels::Execute() called.");
+	Logger::GetInstance()->Log(IntakeSubsystemLogId, Logger::kWARNING, "StopShooterWheels::Execute() called.");
 	Robot::intakeSubsystem->SetIntakeWheelsSpeed(0.0); }
 
 // Make this return true when this Command no longer needs to run execute()

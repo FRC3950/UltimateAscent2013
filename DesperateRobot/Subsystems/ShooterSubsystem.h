@@ -36,11 +36,9 @@ public:
 	void SetShooterMotorVoltage(float voltage);
 	bool CheckUpperLimitSwitch();
 	bool CheckLowerLimitSwitch();
-	bool IsArmed() { return armed;}
+	bool IsArmed() { return CheckLowerLimitSwitch(); }
 	
 private:
-	bool armed;
-
 };
 
 #endif
