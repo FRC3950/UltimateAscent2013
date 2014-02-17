@@ -15,7 +15,7 @@
 
 
 ToggleClaw::ToggleClaw() 
-	: openClaw(new OpenClaw()),
+	: openClaw(new OpenClaw(false)),
 	  closeClaw(new CloseClaw())
 {
 	// Use requires() here to declare subsystem dependencies
