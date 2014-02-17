@@ -24,7 +24,9 @@ private:
 	JoystickButton* autoLaunchButton;
 	JoystickButton* rollBallInButton;
 	JoystickButton* rollBallOutButton;
-	
+	JoystickButton* resetArmPotOriginButton;
+	JoystickButton* gotoLaunchAngle;
+	JoystickButton* disableArmPIDMode;
 public:
 	OI();
  

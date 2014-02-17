@@ -23,6 +23,8 @@
 #include "Commands/RollBallIn.h"
 #include "Commands/RollBallOut.h"
 #include "Commands/StopIntakeWheels.h"
+#include "Commands/FindArmPotOrigin.h"
+#include "Commands/DisableArmPIDMode.h"
 
 OI::OI() {
 	// Process operator interface input here.
@@ -42,8 +44,6 @@ OI::OI() {
 	resetGyroButton = new JoystickButton(greenJoystick, 11);
 	resetGyroButton->WhenPressed(new ResetGyroCommand());
 
-	SmartDashboard::PutData("Drive Command", new DriveCommand());
-	SmartDashboard::PutData("Reset Gyro Command", new ResetGyroCommand());
 
 	rollBallInButton = new JoystickButton(yellowJoystick, 1);
 	rollBallInButton->WhileHeld(new RollBallIn());
@@ -54,6 +54,24 @@ OI::OI() {
 	rollBallOutButton->WhenReleased(new StopIntakeWheels());
 	openClawButton = new JoystickButton(yellowJoystick, 3);
 	openClawButton->WhenPressed(new ToggleClaw());
+	
+	resetArmPotOriginButton = new JoystickButton(yellowJoystick, 10);
+	resetArmPotOriginButton->WhenPressed(new FindArmPotOrigin());
+	
+	gotoLaunchAngle = new JoystickButton(yellowJoystick, 8);
+	gotoLaunchAngle->WhenPressed(new LaunchAngle());
+	
+	disableArmPIDMode = new JoystickButton(yellowJoystick, 9);
+	disableArmPIDMode->WhenPressed(new DisableArmPIDMode());
+	// Add SmartDashboard.
+	SmartDashboard::PutData("Drive Command", new DriveCommand());
+	SmartDashboard::PutData("Reset Gyro Command", new ResetGyroCommand());
+	SmartDashboard::PutData("Stop Intake Weels", new StopIntakeWheels());
+	SmartDashboard::PutData("Roll Ball In", new RollBallIn());
+	SmartDashboard::PutData("Roll Ball Out", new RollBallOut());
+	SmartDashboard::PutData("Toggle Claw", new ToggleClaw());
+	SmartDashboard::PutData("Find Arm Pot Origin", new FindArmPotOrigin());
+	SmartDashboard::PutData("Goto Launch Angle", new LaunchAngle());
 	
 #if defined(NOT_YET)
 	launchAngleButton = new JoystickButton(yellowJoystick, 7);

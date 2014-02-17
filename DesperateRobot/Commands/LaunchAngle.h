@@ -18,7 +18,7 @@ public:
 	virtual void Interrupted();
 	
 private:
-	static const float LAUNCHING_ANGLE = 45.0;
+	static const float LAUNCHING_ANGLE = 0.3930; // this is the relitive set point from the origin
 	float angleVoltage;
 };
 
