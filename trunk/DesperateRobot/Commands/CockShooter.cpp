@@ -27,7 +27,7 @@ void CockShooter::Initialize() {
 static const float PULL_BACK_VOLTAGE = -1.0;
 // Called repeatedly when this Command is scheduled to run
 void CockShooter::Execute() {
-	Robot::shooterSubsystem->SetShooterMotorVoltage(PULL_BACK_VOLTAGE);
+	Robot::shooterSubsystem->SetShooterMotorVoltage(PULL_BACK_VOLTAGE); // moves turn the ball screw to bring the elastics back
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -36,9 +36,13 @@ bool CockShooter::IsFinished() {
 	return Robot::shooterSubsystem->IsArmed();
 }
 
+static const float WaitTime = 0.4;
 // Called once after isFinished returns true
 void CockShooter::End() {
-	Robot::shooterSubsystem->SetShooterMotorVoltage(0.0);
+	Robot::shooterSubsystem->SetShooterMotorVoltage(0.0); // stops the ball screw
+	Wait(WaitTime);
+	Robot::shooterSubsystem->SetTrigger(); // this puts the trigger in to the loaded postion.
+	Wait(WaitTime); // wait to alow the triger to "grab" the elastics.
 }
 
 // Called when another command which requires one or more of the same

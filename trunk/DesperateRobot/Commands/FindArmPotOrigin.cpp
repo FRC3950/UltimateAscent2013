@@ -2,6 +2,10 @@
 #include "FindArmPotOrigin.h"
 #include "../Subsystems/ArmPIDSubsystem.h"
 
+// this command is used to find a top position, using the potentiomiter, of the arm and saves that value to be used
+//in calculations to find the shooting angle.
+
+
 FindArmPotOrigin::FindArmPotOrigin() {
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
