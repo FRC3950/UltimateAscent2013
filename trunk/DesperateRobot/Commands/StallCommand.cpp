@@ -14,6 +14,7 @@ void StallCommand::SetStallTime(double stallTimeInSecs)
 	if (stallTimeInSecs >= 0)
 	{
 		stallTimeInSecs_ = stallTimeInSecs;
+		SetTimeout(stallTimeInSecs);
 	}
 }
 
