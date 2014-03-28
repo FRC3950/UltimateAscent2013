@@ -12,6 +12,6 @@ const unsigned int PneumaticsSubsystemLogId	= 1U << 4;  //0x00000010U;
 const unsigned int ShooterSubsystemLogId	= 1U << 5;	//0x00000020U;
 const unsigned int VisionTargetingId		= 1U << 6;	//0x00000040U;
 
-const unsigned int DefaultLoggingMask = (RobotLogId | DriveSubsystemLogId | VisionTargetingId | ArmPIDSubsystemLogId | IntakeSubsystemLogId);
+const unsigned int DefaultLoggingMask = 0; //(RobotLogId | DriveSubsystemLogId | VisionTargetingId | ArmPIDSubsystemLogId | IntakeSubsystemLogId);
 const Logger::MessageType DefaultLoggingLevel = Logger::kINFO;
 #endif
