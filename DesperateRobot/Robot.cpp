@@ -61,6 +61,8 @@ void Robot::RobotInit() {
   }
 	
 void Robot::AutonomousInit() {
+	
+#if 1	
 	if (autonomousCommand != NULL)
 	{	
 		
@@ -69,6 +71,11 @@ void Robot::AutonomousInit() {
 
 		autonomousCommand->Start();
 	}
+#else
+
+	armPIDSubsystem->FindOriginPosition(true);
+	
+#endif
 }
 	
 void Robot::AutonomousPeriodic() {
@@ -85,7 +92,7 @@ void Robot::TeleopInit() {
 		autonomousCommand->Cancel();
 	}
 	
-	//armPIDSubsystem->FindOriginPosition(false);
+	armPIDSubsystem->FindOriginPosition(false);
 }
 	
 void Robot::TeleopPeriodic() {

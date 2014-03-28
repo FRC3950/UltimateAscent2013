@@ -11,6 +11,10 @@
 
 #include "OpenClaw.h"
 
+#include "../Logger.h"
+#include "../LoggingComponentDefs.h"
+
+
 OpenClaw::OpenClaw(bool delayActive)
 	: delay(delayActive)
 {
@@ -39,6 +43,8 @@ void OpenClaw::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool OpenClaw::IsFinished() {
+	Logger::GetInstance()->Log(RobotLogId, Logger::kINFO, "Claw open.");
+
 	return true;
 }
 

@@ -10,7 +10,7 @@
  */
 class LaunchAngle: public Command {
 public:
-	LaunchAngle();
+	LaunchAngle(bool autonomousMode = false);
 	virtual void Initialize();
 	virtual void Execute();
 	virtual bool IsFinished();
@@ -19,6 +19,7 @@ public:
 	
 private:
 	float angleVoltage;
+	bool  autonomous;
 };
 
 #endif

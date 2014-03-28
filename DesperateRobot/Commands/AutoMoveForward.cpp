@@ -8,13 +8,13 @@ AutoMoveForward::AutoMoveForward() {
 	Requires(Robot::driveSubsystem);
 }
 /// edit this to change the time the robot moves forward in autonomous///
-static const double DriveTimeInSec = 2.0;
+static const double DriveTimeInSec = 0.6;
 // Called just before this Command runs the first time
 void AutoMoveForward::Initialize() {
 	SetTimeout(DriveTimeInSec);
 }
 /// edit this to change the speed at which the robot moves in autonomous, it might need to be negated///
-static const float DriveForwardSpeed = 1.0;
+static const float DriveForwardSpeed = -1.0;
 // Called repeatedly when this Command is scheduled to run
 void AutoMoveForward::Execute() {
 	Robot::driveSubsystem->MecanumDrive(0, DriveForwardSpeed, 0);

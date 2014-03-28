@@ -7,8 +7,12 @@
 #include "../UtilFun.h"
 
 
-LaunchAngle::LaunchAngle()
-	: angleVoltage(0.0)
+static const float AutonomousLowerEpsilon = 0.06;
+static const float AutonomousUpperEpsilon = 0.06;
+
+LaunchAngle::LaunchAngle(bool autonomousMode /* = false */)
+	: angleVoltage(0.0),
+	  autonomous(autonomousMode)
 {
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
@@ -36,9 +40,24 @@ bool LaunchAngle::IsFinished() {
 	SmartDashboard::PutNumber("Arm Pot", potVoltage);
 	SmartDashboard::PutNumber("Arm Seeking Pot Voltage", angleVoltage);
 
-	Robot::armPIDSubsystem->UpdateReadyToFireField(angleVoltage, potVoltage);
+	bool finished = false;
 	
-	return false;
+	if (!autonomous)
+	{
+		Robot::armPIDSubsystem->UpdateReadyToFireField(angleVoltage, potVoltage);
+	}
+	else
+	{
+		finished = Robot::armPIDSubsystem->UpdateReadyToFireField(angleVoltage,
+				                                                  potVoltage,
+				                                                  AutonomousLowerEpsilon,
+				                                                  AutonomousUpperEpsilon);
+		
+		Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "LaunchAngle : POT Reading %f has %s target voltage", 
+				                   potVoltage, finished ? "MET" : "NOT MET");
+
+	}
+	return finished;
 }
 
 // Called once after isFinished returns true
