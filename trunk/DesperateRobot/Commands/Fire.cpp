@@ -11,9 +11,11 @@
 
 
 #include "Fire.h"
+#include "FindArmPotOrigin.h"
 
 Fire::Fire() {
 	AddSequential(new Launch());
+	AddSequential(new FindArmPotOrigin());
 	AddSequential(new CockShooter());
 	AddSequential(new BallScrewUp());
 	

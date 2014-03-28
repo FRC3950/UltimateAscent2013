@@ -189,7 +189,7 @@ static const float VOLTAGE_TOLERANCE_MAX = 0.25;
 static const float VOLTAGE_SCALE_FACTOR = .65;
 
 void ArmPIDSubsystem::ManualMoveArmControl(float voltage) {
-	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "ArmPIDSubsystem::ManualMoverArmControl entered.");
+//	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "ArmPIDSubsystem::ManualMoverArmControl entered.");
 	
 	bool limitHit = false;
 	
@@ -198,7 +198,7 @@ void ArmPIDSubsystem::ManualMoveArmControl(float voltage) {
 		SetPIDSubsystem(false);
 	}
 
-	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "ArmPIDSubsystem::ManualMoverArmControl original setting speed %f.", voltage);
+//	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "ArmPIDSubsystem::ManualMoverArmControl original setting speed %f.", voltage);
 	voltage *= VOLTAGE_SCALE_FACTOR;
 	voltage = ZeroIfInRangeInclusive(voltage, VOLTAGE_TOLERANCE_MIN, VOLTAGE_TOLERANCE_MAX);
 	
@@ -223,13 +223,13 @@ void ArmPIDSubsystem::ManualMoveArmControl(float voltage) {
 	{
 		 if ((voltage != 0.0) || ((voltage == 0.0) && (armSpeedController->Get() != 0.0)))
 		 {
-			 Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kWARNING, "ArmPIDSubsystem::ManualMoverArmControl Setting voltage %f.", voltage);
+//			 Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kWARNING, "ArmPIDSubsystem::ManualMoverArmControl Setting voltage %f.", voltage);
 		 }
 	}
 	
 #if defined(POLL_THE_POT)
 	double potVoltage = GetPotentiometerReading();
-	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "*** Arm POT value = %g ***", potVoltage);
+//	Logger::GetInstance()->Log(ArmPIDSubsystemLogId, Logger::kINFO, "*** Arm POT value = %g ***", potVoltage);
 	SmartDashboard::PutNumber("Arm Pot", potVoltage);
 
 #endif
@@ -315,6 +315,20 @@ void ArmPIDSubsystem::UpdateReadyToFireField(float targetVoltage, float currVolt
 			                            targetVoltage + SHOOTING_ANGLE_EPSILON);
 
 	SmartDashboard::PutBoolean(ReadyToFireField, readyToFire);
+}
+
+bool ArmPIDSubsystem::UpdateReadyToFireField(float targetVoltage, 
+		                                     float currVoltage,
+		                                     float lowerEpsilon,
+		                                     float upperEpsilon)
+{
+	bool readyToFire = InRangeInclusive(currVoltage,
+			                            targetVoltage - lowerEpsilon,
+			                            targetVoltage + upperEpsilon);
+
+	SmartDashboard::PutBoolean(ReadyToFireField, readyToFire);
+	
+	return readyToFire;
 }
 
 static const float PID_TARGET_EPSILON = 0.01;

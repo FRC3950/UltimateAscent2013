@@ -6,7 +6,7 @@
 #include "../LoggingComponentDefs.h"
 
 static const double TargetActiveDelayAferAutoMoveInSecs = 0.0;
-static const double TargetNotActiveDelayAfterAutoMoveInSecs  = 1.0;
+static const double TargetNotActiveDelayAfterAutoMoveInSecs  = 3.0;
 		
 static const char *NetworkTableName = "SmartDashboard";
 static const char *TargetDetectedVarName = "DETECTED";
@@ -33,8 +33,15 @@ void VisionTargeting::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void VisionTargeting::Execute() {
-	targetActive_ = networkTable_->GetBoolean(TargetDetectedVarName, false);
-	Logger::GetInstance()->Log(VisionTargetingId, Logger::kINFO, "VisionTargeting: DETECTED = %s", targetActive_ ? "TRUE" : "FALSE");
+	if (networkTable_ != NULL)
+	{
+		targetActive_ = networkTable_->GetBoolean(TargetDetectedVarName, false);
+		Logger::GetInstance()->Log(VisionTargetingId, Logger::kINFO, "VisionTargeting: DETECTED = %s", targetActive_ ? "TRUE" : "FALSE");
+	}
+	else
+	{
+		targetActive_ = false;
+	}
 }
 
 // Make this return true when this Command no longer needs to run execute()

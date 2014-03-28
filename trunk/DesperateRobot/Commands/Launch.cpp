@@ -11,6 +11,10 @@
 
 #include "Launch.h"
 
+#include "../Logger.h"
+#include "../LoggingComponentDefs.h"
+
+
 Launch::Launch() {
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
@@ -26,6 +30,8 @@ void Launch::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void Launch::Execute() {
+	Logger::GetInstance()->Log(RobotLogId, Logger::kINFO, "Launch: Releasing Trigger.");
+
 	Robot::shooterSubsystem->ReleaseTrigger();
 	Wait(0.5);
 }
