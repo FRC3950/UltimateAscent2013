@@ -7,9 +7,6 @@
 #include "../UtilFun.h"
 
 
-static const float AutonomousLowerEpsilon = 0.06;
-static const float AutonomousUpperEpsilon = 0.06;
-
 LaunchAngle::LaunchAngle(bool autonomousMode /* = false */)
 	: angleVoltage(0.0),
 	  autonomous(autonomousMode)
@@ -44,7 +41,10 @@ bool LaunchAngle::IsFinished() {
 	
 	if (!autonomous)
 	{
-		Robot::armPIDSubsystem->UpdateReadyToFireField(angleVoltage, potVoltage);
+		Robot::armPIDSubsystem->UpdateReadyToFireField(angleVoltage, 
+													   potVoltage,
+													   TeleOpShootingAngleLowerEpsilon,
+													   TeleOpShootingAngleUpperEpsilon);
 	}
 	else
 	{

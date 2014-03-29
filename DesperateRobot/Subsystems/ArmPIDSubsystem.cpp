@@ -12,6 +12,7 @@
 #include "../Robotmap.h"
 #include "../Logger.h"
 #include "../LoggingComponentDefs.h"
+#include "../ShootingTargetDefs.h"
 #include "../SmartDashboardFields.h"
 #include "../UtilFun.h"
 #include "../Commands/MoveArm.h"
@@ -310,27 +311,10 @@ void ArmPIDSubsystem::SetReadyToFireField(bool setting)
 
 void ArmPIDSubsystem::UpdateReadyToFireField(float targetVoltage)
 {
-	UpdateReadyToFireField(targetVoltage, GetPotentiometerReading());
-}
-
-static float const SHOOTING_ANGLE_UPPER_EPSILON = 0.00;
-static float const SHOOTING_ANGLE_LOWER_EPSILON = 0.02;
-
-void ArmPIDSubsystem::UpdateReadyToFireField(float targetVoltage, float currVoltage)
-{
-	static int counter = 0;
-	
-	if ((++counter % 50) != 0)
-	{
-		return;
-	}
-	
-	counter = 0;
-	bool readyToFire = InRangeInclusive(currVoltage,
-			                            targetVoltage - SHOOTING_ANGLE_LOWER_EPSILON,
-			                            targetVoltage + SHOOTING_ANGLE_UPPER_EPSILON);
-
-	SmartDashboard::PutBoolean(ReadyToFireField, readyToFire);
+	UpdateReadyToFireField(targetVoltage, 
+			               GetPotentiometerReading(),
+			               TeleOpShootingAngleLowerEpsilon,
+			               TeleOpShootingAngleUpperEpsilon);
 }
 
 bool ArmPIDSubsystem::UpdateReadyToFireField(float targetVoltage, 

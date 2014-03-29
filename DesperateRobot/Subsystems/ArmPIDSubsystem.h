@@ -41,7 +41,7 @@ class ArmPIDSubsystem: public PIDSubsystem {
 
 	void SetReadyToFireField(bool setting);
 	void UpdateReadyToFireField(float targetVoltage);
-	void UpdateReadyToFireField(float targetVoltage, float currVoltage);
+//	void UpdateReadyToFireField(float targetVoltage, float currVoltage);
 	bool UpdateReadyToFireField(float targetVoltage, 
 			                    float currVoltage,
 			                    float lowerEpsilon,
