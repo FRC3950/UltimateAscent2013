@@ -62,7 +62,7 @@ void Robot::RobotInit() {
   }
 	
 void Robot::AutonomousInit() {
-	
+
 #if 1	
 	if (autonomousCommand != NULL)
 	{	
@@ -79,7 +79,7 @@ void Robot::AutonomousInit() {
 	
 #endif
 }
-	
+
 void Robot::AutonomousPeriodic() {
 	Scheduler::GetInstance()->Run();
 }
