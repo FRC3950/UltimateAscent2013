@@ -48,13 +48,10 @@ static const float Y_TOLERANCE_MAX = 0.25;
 static const float X_TOLERANCE_MIN = -0.25;
 static const float X_TOLERANCE_MAX = 0.35;
 
-
-
 void DriveSubsystem::MecanumDrive(float x, float y, float twist) { 
-	float gyroAngle = gyro1->GetAngle();
+	float gyroAngle = gyro1->GetAngle(); // uncoment when you whant to use the gyro// 
 	
 	//printf("DriveSubsystem:(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
-	
 	//filter the X Y and twist values to 0 if thay are in a min max tolerence range
 	// otherwize the original value is used
 	x = ZeroIfInRangeInclusive(x, X_TOLERANCE_MIN, X_TOLERANCE_MAX);
@@ -69,6 +66,7 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
 	
 	//Logger::GetInstance()->Log(Logger::kINFO, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
 	robotDriveMecanum->MecanumDrive_Cartesian(x, y, twist, gyroAngle);
+	//robotDriveMecanum->ArcadeDrive(y,twist);
 }
 
 void DriveSubsystem::ResetGyro(){

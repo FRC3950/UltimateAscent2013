@@ -46,7 +46,9 @@ class ArmPIDSubsystem: public PIDSubsystem {
 			                    float currVoltage,
 			                    float lowerEpsilon,
 			                    float upperEpsilon);
-	
+
+	bool PollUpperArmLimit();
+	bool PollLowerArmLimit();
 	
 protected:
 	// These are overridden base class methods.
@@ -55,8 +57,6 @@ protected:
 	
 	
  private:
-	bool PollUpperArmLimit();
-	bool PollLowerArmLimit();
 	float AngleToVoltage(float angle);
 	float PotVoltageToAngle(float voltage);
 	

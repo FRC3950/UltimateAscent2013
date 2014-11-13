@@ -11,12 +11,14 @@
 
 
 #include "Fire.h"
+#include "ArmUp.h"
 #include "FindArmPotOrigin.h"
 
 Fire::Fire() {
 	AddSequential(new Launch());
 //	AddSequential(new FindArmPotOrigin());
-	AddSequential(new CockShooter());
+	AddParallel(new CockShooter());
+	AddSequential(new ArmUp());
 	AddSequential(new BallScrewUp());
 	
 	// Add Commands here:
