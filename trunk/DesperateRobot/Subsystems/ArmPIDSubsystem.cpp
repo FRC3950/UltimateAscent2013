@@ -23,9 +23,9 @@
 #define ARM_LOWER_LIMIT_SWITCH_IN 1
 #define POLL_THE_POT 1
 
-static const double Kp = 1.0;
+static const double Kp = 1.35;
 static const double Ki = 0.0;
-static const double Kd = 1.0;
+static const double Kd = 2.0;
 
 static const float PotOriginDefault = 1.215;
 
