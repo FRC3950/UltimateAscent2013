@@ -88,7 +88,7 @@ void RobotMap::init() {
 	shooterSubsystemUpperLimitSwitch = new DigitalInput(1, 3);
 	lw->AddSensor("Shooter Subsystem", "Upper Limit Switch", shooterSubsystemUpperLimitSwitch);
 		
-	shooterSubsystemLowerLimitSwitch = new DigitalInput(1, 4);
+	shooterSubsystemLowerLimitSwitch = new DigitalInput(1, 7);
 	lw->AddSensor("Shooter Subsystem", "Lower Limit Switch", shooterSubsystemLowerLimitSwitch);
 		
 	shooterSubsystemShooterMotor = new Victor(1, 7);

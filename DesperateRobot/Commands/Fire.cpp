@@ -17,8 +17,8 @@
 Fire::Fire() {
 	AddSequential(new Launch());
 //	AddSequential(new FindArmPotOrigin());
-	AddParallel(new CockShooter());
-	AddSequential(new ArmUp());
+	AddParallel(new ArmUp());
+	AddSequential(new CockShooter());
 	AddSequential(new BallScrewUp());
 	
 	// Add Commands here:
