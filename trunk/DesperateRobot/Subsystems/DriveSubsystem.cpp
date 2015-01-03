@@ -61,7 +61,7 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
 	//Scale twist so movements are smoother.
 	twist *= TWIST_SCALE_FACTOR;
 	
-	// Uncomment this if you whant to disable the gyro. 
+	//Uncomment this if you whant to disable the gyro. 
 	//gyroAngle = 0.0;
 	
 	//Logger::GetInstance()->Log(Logger::kINFO, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
