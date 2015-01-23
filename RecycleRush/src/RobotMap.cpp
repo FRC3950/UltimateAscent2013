@@ -41,6 +41,7 @@ void RobotMap::init() {
 	// Not hooked up.
 	doorControlSubsystemContanterLimitSwich = new DigitalInput(1);
 	lw->AddSensor("DoorControlSubsystem", "ContanterLimitSwich", doorControlSubsystemContanterLimitSwich);
+#endif
 	
 	// Hooked up.
 	gantrySubsystemLiftSolenoid = new Solenoid(0, 0);
@@ -57,7 +58,7 @@ void RobotMap::init() {
 	// Present and hooked up.
 	gantrySubsystemCrateAlignedSwich = new DigitalInput(0);
 	lw->AddSensor("GantrySubsystem", "CrateAlignedSwich", gantrySubsystemCrateAlignedSwich);
-#endif
+
 	
 	driveSubsystemCANTalon0 = new CANTalon(0);
 	
