@@ -95,11 +95,11 @@ static const float X_TOLERANCE_MIN = -0.25;
 static const float X_TOLERANCE_MAX = 0.35;
 
 void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
-	float gyroAngle = gyro1->GetAngle(); // uncomment when you whant to use the gyro//
+	float gyroAngle = gyro1->GetAngle(); // uncomment when you want to use the gyro//
 
 	//printf("DriveSubsystem:(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
-	//filter the X Y and twist values to 0 if thay are in a min max tolerence range
-	// otherwize the original value is used
+	//filter the X Y and twist values to 0 if they are in a min max tolerence range
+	// otherwise the original value is used
 	x = ZeroIfInRangeInclusive(x, X_TOLERANCE_MIN, X_TOLERANCE_MAX);
 	y = ZeroIfInRangeInclusive(y, Y_TOLERANCE_MIN, Y_TOLERANCE_MAX);
 	twist = ZeroIfInRangeInclusive(twist, TWIST_TOLERANCE_MIN, TWIST_TOLERANCE_MAX);
@@ -107,7 +107,7 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist) {
 	//Scale twist so movements are smoother.
 	twist *= TWIST_SCALE_FACTOR;
 
-	//Uncomment this if you whant to disable the gyro.
+	//Uncomment this if you want to disable the gyro.
 	//gyroAngle = 0.0;
 
 	Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
