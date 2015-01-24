@@ -2,5 +2,5 @@
 
 #include <string>
 
-const std::string OutputCheckContainerAlignmentInSecsConfigKey = "OutputCheckContainerAlignmentInSecs";
+const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey = "Gantry_OutputCheckContainerAlignmentInSecs";
 
