@@ -2,4 +2,4 @@
 
 #include <string>
 
-extern const std::string OutputCheckContainerAlignmentInSecsConfigKey;
+extern const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey;
