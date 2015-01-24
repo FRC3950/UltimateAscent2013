@@ -18,15 +18,13 @@
  *
  * @author ExampleAuthor
  */
-class FireLiftSolenoidCommand: public Command {
+class ToggleLiftSolenoidCommand: public Command {
 public:
-	FireLiftSolenoidCommand();
+	ToggleLiftSolenoidCommand();
 	virtual void Initialize();
 	virtual void Execute();
 	virtual bool IsFinished();
 	virtual void End();
 	virtual void Interrupted();
 
-private:
-	bool fire;
 };

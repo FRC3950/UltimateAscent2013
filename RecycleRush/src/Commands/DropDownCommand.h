@@ -18,19 +18,13 @@
  *
  * @author ExampleAuthor
  */
-class CheckContainerAlignmentCommand: public Command {
+class DropDownCommand: public Command {
 public:
-	CheckContainerAlignmentCommand();
+	DropDownCommand();
 	virtual void Initialize();
 	virtual void Execute();
 	virtual bool IsFinished();
 	virtual void End();
 	virtual void Interrupted();
 
-private:
-	bool SmartDashboardNeedsUpdating();
-
-	double outputCheckContainerAlignmentIntervalInSecs;
-	double lastOutputCheckContainerAlignment;
 };
-

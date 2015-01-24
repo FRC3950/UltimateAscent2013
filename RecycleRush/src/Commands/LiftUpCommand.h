@@ -18,19 +18,13 @@
  *
  * @author ExampleAuthor
  */
-class CheckContainerAlignmentCommand: public Command {
+class LiftUpCommand: public Command {
 public:
-	CheckContainerAlignmentCommand();
+	LiftUpCommand();
 	virtual void Initialize();
 	virtual void Execute();
 	virtual bool IsFinished();
 	virtual void End();
 	virtual void Interrupted();
 
-private:
-	bool SmartDashboardNeedsUpdating();
-
-	double outputCheckContainerAlignmentIntervalInSecs;
-	double lastOutputCheckContainerAlignment;
 };
-
