@@ -9,13 +9,10 @@
 // it from being updated in the future.
 
 
-#include "FireliftSolenoidCommand.h"
-
+#include <Commands/OpenGripCommand.h>
 #include "Logging.h"
 
-FireLiftSolenoidCommand::FireLiftSolenoidCommand()
-		: fire(false)
-{
+OpenGripCommand::OpenGripCommand() {
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
 	Requires(Robot::gantrySubsystem);
@@ -24,28 +21,28 @@ FireLiftSolenoidCommand::FireLiftSolenoidCommand()
 }
 
 // Called just before this Command runs the first time
-void FireLiftSolenoidCommand::Initialize() {
-	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "FireLiftSolenoidCommand Initialized()");
+void OpenGripCommand::Initialize() {
+	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "OpenGripCommand Initialized()");
 }
 
 // Called repeatedly when this Command is scheduled to run
-void FireLiftSolenoidCommand::Execute() {
-	fire = !fire;
-	Robot::gantrySubsystem->FireLiftSolenoid(fire);
+void OpenGripCommand::Execute() {
+	Robot::gantrySubsystem->OpenGrip();
+	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "OpenGripCommand::Execute() -> Grip is open.");
 }
 
 // Make this return true when this Command no longer needs to run execute()
-bool FireLiftSolenoidCommand::IsFinished() {
-	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "FireLiftSolenoidCommand IsFinished() called.");
+bool OpenGripCommand::IsFinished() {
+	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "OpenGripCommand IsFinished() called.");
 	return true;
 }
 
 // Called once after isFinished returns true
-void FireLiftSolenoidCommand::End() {
+void OpenGripCommand::End() {
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void FireLiftSolenoidCommand::Interrupted() {
+void OpenGripCommand::Interrupted() {
 
 }

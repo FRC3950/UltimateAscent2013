@@ -16,21 +16,15 @@
 /**
  *
  *
- * @author ExampleAuthor
+ * @author Rob Saccone
  */
-class CheckContainerAlignmentCommand: public Command {
+class CloseGripCommand: public Command {
 public:
-	CheckContainerAlignmentCommand();
+	CloseGripCommand();
 	virtual void Initialize();
 	virtual void Execute();
 	virtual bool IsFinished();
 	virtual void End();
 	virtual void Interrupted();
 
-private:
-	bool SmartDashboardNeedsUpdating();
-
-	double outputCheckContainerAlignmentIntervalInSecs;
-	double lastOutputCheckContainerAlignment;
 };
-

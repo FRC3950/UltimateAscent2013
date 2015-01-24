@@ -10,10 +10,22 @@
 
 
 #include "CheckContainerAlignmentCommand.h"
+#include <LiveWindow/LiveWindow.h>
+#include <SmartDashboard/SmartDashboard.h>
+#include "../ConfigKeys.h"
+#include "../Config/ConfigInstanceMgr.h"
+#include "../Logging.h"
+#include "../SmartDashboardFields.h"
 
-#include "Logging.h"
+namespace
+{
+	double OutputCheckContainerAlignmentInSecsDefaultValue = 1.0;
+}
 
-CheckContainerAlignmentCommand::CheckContainerAlignmentCommand() {
+CheckContainerAlignmentCommand::CheckContainerAlignmentCommand()
+	: 	outputCheckContainerAlignmentIntervalInSecs(OutputCheckContainerAlignmentInSecsDefaultValue),
+		lastOutputCheckContainerAlignment(-1.0)
+{
 	// Use requires() here to declare subsystem dependencies
 	// eg. requires(chassis);
 	Requires(Robot::gantrySubsystem);
@@ -24,13 +36,23 @@ CheckContainerAlignmentCommand::CheckContainerAlignmentCommand() {
 // Called just before this Command runs the first time
 void CheckContainerAlignmentCommand::Initialize() {
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand Initialized()");
+
+	outputCheckContainerAlignmentIntervalInSecs = ConfigInstanceMgr::getInstance()->getDoubleVal(OutputCheckContainerAlignmentInSecsConfigKey, lastOutputCheckContainerAlignment);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void CheckContainerAlignmentCommand::Execute() {
-	bool limitSwitchSet = Robot::gantrySubsystem->CheckContanerAlignedLimitSwitch();
-	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "Container Aligned Limit Switch Set is %s",
-							   limitSwitchSet ? "TRUE" : "FALSE");
+
+	if (SmartDashboardNeedsUpdating())
+	{
+		bool limitSwitchSet = Robot::gantrySubsystem->CheckContainerAlignedLimitSwitch();
+
+
+		SmartDashboard::PutBoolean(ContainerAlignedField, limitSwitchSet);
+
+		Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "Container Aligned Limit Switch Set is %s",
+								   limitSwitchSet ? "TRUE" : "FALSE");
+	}
 }
 
 // Make this return true when this Command no longer needs to run execute()
@@ -47,4 +69,23 @@ void CheckContainerAlignmentCommand::End() {
 // subsystems is scheduled to run
 void CheckContainerAlignmentCommand::Interrupted() {
 
+}
+
+bool CheckContainerAlignmentCommand::SmartDashboardNeedsUpdating()
+{
+	if (lastOutputCheckContainerAlignment <= 0.0)
+	{
+		lastOutputCheckContainerAlignment = Timer::GetFPGATimestamp();
+		return true;
+	}
+
+	double currTime = Timer::GetFPGATimestamp();
+
+	if ((currTime - lastOutputCheckContainerAlignment) >= outputCheckContainerAlignmentIntervalInSecs)
+	{
+		lastOutputCheckContainerAlignment = currTime;
+		return true;
+	}
+
+	return false;
 }
