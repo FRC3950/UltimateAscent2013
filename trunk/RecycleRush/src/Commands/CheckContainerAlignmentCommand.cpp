@@ -37,7 +37,7 @@ CheckContainerAlignmentCommand::CheckContainerAlignmentCommand()
 void CheckContainerAlignmentCommand::Initialize() {
 	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand Initialized()");
 
-	outputCheckContainerAlignmentIntervalInSecs = ConfigInstanceMgr::getInstance()->getDoubleVal(Gantry_OutputCheckContainerAlignmentInSecsConfigKey,
+	outputCheckContainerAlignmentIntervalInSecs = ConfigInstanceMgr::getInstance()->getDoubleVal(ConfigKeys::Gantry_OutputCheckContainerAlignmentInSecsConfigKey,
 																								 lastOutputCheckContainerAlignment);
 }
 

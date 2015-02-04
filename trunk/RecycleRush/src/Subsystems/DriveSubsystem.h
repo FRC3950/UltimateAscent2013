@@ -19,6 +19,14 @@
  *
  * @author ExampleAuthor
  */
+
+// Default values for the various configuration
+// items that the drive subsystem uses.
+namespace DriveSubsystemConfigValueDefaults
+{
+	const bool Drive_UseGyroDefaultValue = false;
+}
+
 class DriveSubsystem: public Subsystem {
 private:
 	// It's desirable that everything possible under private except
@@ -35,6 +43,9 @@ public:
 	DriveSubsystem();
 	void InitDefaultCommand();
 	void MecanumDrive(float x, float y, float twist);
+
+private:
+	bool useGyro;
 };
 
 #endif
