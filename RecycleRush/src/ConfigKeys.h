@@ -2,9 +2,16 @@
 
 #include <string>
 
-extern const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey;
+// Contains the predefined configuration keys:
+namespace ConfigKeys
+{
+	// Gantry Subsystem Keys.
+	extern const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey;
 
-extern const std::string Drive_WheelDiameterInInches;
-
-extern const std::string Drive_CountsPerShaftRotation;
+	// Drive Subsystem Keys.
+	extern const std::string Drive_CreateGyroKey;
+	extern const std::string Drive_UseGyroKey;
+	extern const std::string Drive_WheelDiameterInInchesKey;
+	extern const std::string Drive_CountsPerShaftRotationKey;
+}
 

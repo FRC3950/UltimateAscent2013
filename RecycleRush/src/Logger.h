@@ -4,6 +4,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include <WPILib.h>
+
 //************************************************
 // In order to enable file writing see Logger.cpp
 // ************************************************
@@ -53,6 +55,8 @@ protected:
    void LogToConsole(const char *msgType, const char *message, va_list args);
 private:
    static Logger *m_instance;
+
+   ReentrantSemaphore m_lock;
    FILE *m_logFile;
    MessageType m_loggingLevel;
    unsigned int m_loggingMask;

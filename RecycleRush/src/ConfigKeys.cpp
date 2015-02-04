@@ -2,9 +2,15 @@
 
 #include <string>
 
-const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey = "Gantry_OutputCheckContainerAlignmentInSecs";
+namespace ConfigKeys
+{
+	const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey = "Gantry_OutputCheckContainerAlignmentInSecs";
 
-const std::string Drive_WheelDiameterInInches = "Drive_WheelDiameterInInches";
+	const std::string Drive_CreateGyroKey = "Drive_CreateGyro";
 
-const std::string Drive_CountsPerShaftRotation = "Drive_CountsPerShaftRotation";
+	const std::string Drive_UseGyroKey = "Drive_UseGyro";
 
+	const std::string Drive_WheelDiameterInInchesKey = "Drive_WheelDiameterInInches";
+
+	const std::string Drive_CountsPerShaftRotationKey = "Drive_CountsPerShaftRotation";
+}

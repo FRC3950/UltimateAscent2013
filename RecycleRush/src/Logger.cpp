@@ -182,6 +182,8 @@ void Logger::LogInternal(MessageType type, const char* message, va_list args)
 	  break;
 	}
 	
+	Synchronized guard(m_lock);
+
 	if (m_logFile != NULL )
 	{
 		LogToFile(msgType, message, args);
