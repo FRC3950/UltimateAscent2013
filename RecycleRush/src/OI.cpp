@@ -40,19 +40,22 @@ OI::OI()
 
 	driveJoystick = new Joystick(0);
 
-#if 0
 
+//to disable lift solenoid
 	gantryController = new Joystick(1);
 
 	fireLiftSolenoidButton = new JoystickButton(gantryController, 1);
 	liftUpButton = new JoystickButton(gantryController, 2);
+
+	fireLiftSolenoidButton->WhenPressed(new ToggleLiftSolenoidCommand());
+	liftUpButton->WhenPressed(new LiftUpCommand());
+#if 1
 	dropDownButton = new JoystickButton(gantryController, 3);
 	openGripButton = new JoystickButton(gantryController, 4);
 	closeGripButton = new JoystickButton(gantryController, 5);
 	toggleGripButton = new JoystickButton(gantryController, 6);
 
-	fireLiftSolenoidButton->WhenPressed(new ToggleLiftSolenoidCommand());
-	liftUpButton->WhenPressed(new LiftUpCommand());
+
 	dropDownButton->WhenPressed(new DropDownCommand());
 	openGripButton->WhenPressed(new OpenGripCommand());
 	closeGripButton->WhenPressed(new CloseGripCommand());
@@ -61,8 +64,8 @@ OI::OI()
 #else
 
 	gantryController = 0;
-	fireLiftSolenoidButton = 0;
-	liftUpButton = 0;
+	//fireLiftSolenoidButton = 0;
+	//liftUpButton = 0;
 	dropDownButton = 0;
 	openGripButton = 0;
 	closeGripButton = 0;

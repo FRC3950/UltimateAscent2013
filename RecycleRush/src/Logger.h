@@ -51,12 +51,15 @@ public:
 protected:
    Logger(bool logToConsole, bool logToFile);
    void LogInternal(MessageType type, const char* message, va_list args);
-   void LogToFile(const char *msgType, const char *message, va_list args);
-   void LogToConsole(const char *msgType, const char *message, va_list args);
+   void LogToFile(const char *timeStr, const char *msgType, const char *message, va_list args);
+   void LogToConsole(const char *timeStr, const char *msgType, const char *message, va_list args);
+   char *getTimeStamp();
+
 private:
    static Logger *m_instance;
 
    ReentrantSemaphore m_lock;
+   char *m_timeStringBuffer;
    FILE *m_logFile;
    MessageType m_loggingLevel;
    unsigned int m_loggingMask;
