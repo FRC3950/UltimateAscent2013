@@ -13,4 +13,8 @@ namespace ConfigKeys
 	const std::string Drive_WheelDiameterInInchesKey = "Drive_WheelDiameterInInches";
 
 	const std::string Drive_CountsPerShaftRotationKey = "Drive_CountsPerShaftRotation";
+
+	const std::string Drive_EnableSafety = "Drive_EnableSafety";
+
+	const std::string Drive_SafetyTimeOut = "Drive_SafetyTimeOut";
 }
