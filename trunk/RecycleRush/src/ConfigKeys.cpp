@@ -17,4 +17,18 @@ namespace ConfigKeys
 	const std::string Drive_EnableSafety = "Drive_EnableSafety";
 
 	const std::string Drive_SafetyTimeOut = "Drive_SafetyTimeOut";
+
+	const std::string Drive_TwistToleranceMin = "Drive_TwistToleranceMin";
+
+	const std::string Drive_TwistToleranceMax = "Drive_TwistToleranceMax";
+
+	const std::string Drive_TwistScaleFactor = "Drive_TwistScaleFactor";
+
+	const std::string Drive_YToleranceMin = "Drive_YToleranceMin";
+
+	const std::string Drive_YToleranceMax = "Drive_YToleranceMax";
+
+	const std::string Drive_XToleranceMin = "Drive_XToleranceMin";
+
+	const std::string Drive_XToleranceMax = "Drive_XToleranceMax";
 }

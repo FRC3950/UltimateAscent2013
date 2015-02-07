@@ -14,6 +14,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -29,7 +30,8 @@ Logger* Logger::m_instance = NULL;
 static const char *LogDir = "/home/lvuser/Logs";
 
 Logger::Logger(bool logToConsole, bool logToFile)
-	: m_loggingLevel(kERROR),
+	: m_timeStringBuffer(new char[512]),
+	  m_loggingLevel(kERROR),
 	  m_loggingMask(UINT_MAX),
 	  m_logToConsole(logToConsole)
 {
@@ -112,6 +114,8 @@ Logger::~Logger()
    
    // Set reference to null
    m_logFile = NULL;
+
+   delete [] m_timeStringBuffer;
 }
 
 static const char *ERROR_MSG = "ERROR\t";
@@ -182,22 +186,25 @@ void Logger::LogInternal(MessageType type, const char* message, va_list args)
 	  break;
 	}
 	
+
 	Synchronized guard(m_lock);
+
+	char *timeStr = getTimeStamp();
 
 	if (m_logFile != NULL )
 	{
-		LogToFile(msgType, message, args);
+		LogToFile(timeStr, msgType, message, args);
 	}
 	
 	if (m_logToConsole)
 	{
-		LogToConsole(msgType, message, args);
+		LogToConsole(timeStr, msgType, message, args);
 	}
 }
 
-void Logger::LogToFile(const char *msgTypeStr, const char* message, va_list args)
+void Logger::LogToFile(const char* timeStr, const char *msgTypeStr, const char* message, va_list args)
 {
-    fprintf(m_logFile, msgTypeStr);
+    fprintf(m_logFile, "%s %s", timeStr, msgTypeStr);
 
     // Write to the file
     vfprintf(m_logFile, message, args);
@@ -206,13 +213,33 @@ void Logger::LogToFile(const char *msgTypeStr, const char* message, va_list args
     fflush(m_logFile);
 }
 
-void Logger::LogToConsole(const char *msgTypeStr, const char *message, va_list args)
+void Logger::LogToConsole(const char *timeStr, const char *msgTypeStr, const char *message, va_list args)
 {
-    printf(msgTypeStr);
+    printf("%s %s", timeStr, msgTypeStr);
 
     // Write to the file
     vprintf(message, args);
     printf("\n");
 }
 
+char *Logger::getTimeStamp()
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+
+	struct tm *ptm = localtime(&tv.tv_sec);
+	long milliSecs = tv.tv_usec / 1000;
+
+	sprintf(m_timeStringBuffer, "%02d-%02d-%4d-%02d.%02d.%02d.%03ld",
+			   ptm->tm_mday,
+			   (ptm->tm_mon + 1),
+			   (ptm->tm_year + 1900),
+			   ptm->tm_hour,
+			   ptm->tm_min,
+			   ptm->tm_sec,
+			   milliSecs);
+
+	return m_timeStringBuffer;
+}
 
