@@ -58,14 +58,16 @@ void DropDownCommand::Execute() {
 }
 // Make this return true when this Command no longer needs to run execute()
 bool DropDownCommand::IsFinished() {
-	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "DropDownCommand IsFinished() called.");
-
 	double currTime = Timer::GetFPGATimestamp();
 
-	if (currTime - m_startTime >= downCompletionDelayTime)
+	if ((currTime - m_startTime) >= downCompletionDelayTime)
 	{
+		m_startTime = 0.0;
+		Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "DropDownCommand IsFinished() called -> Done.");
 		return true;
 	}
+
+	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "DropDownCommand IsFinished() called.");
 
 	return false;
 }
