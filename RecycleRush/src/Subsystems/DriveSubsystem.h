@@ -27,6 +27,13 @@ namespace DriveSubsystemConfigValueDefaults
 	const bool Drive_UseGyroDefaultValue = false;
 }
 
+enum DriveHeading {
+	Forward,
+	Back,
+	Left,
+	Right
+};
+
 class DriveSubsystem: public Subsystem {
 private:
 	// It's desirable that everything possible under private except
@@ -44,9 +51,22 @@ public:
 	void InitDefaultCommand();
 	void MecanumDrive(float x, float y, float twist);
 	void EnableDriveSubsystem();
+	bool AutoModeSetup(DriveHeading heading, float distance);
+	void AutoMoveExecute();
+	bool AutoAreWeThereYet();
+	bool AutoEnabled() const;
+	void AutoModeDisable();
 
 private:
 	void SetSafetyMode(CANTalon* motor, bool enabled, float timeout = 0.0);
+
+	DriveHeading autoHeading;
+
+	float autoDriveDistenceInInches;
+
+	bool autoEnabled;
+
+	bool autoDriving;
 
 	bool useGyro;
 };

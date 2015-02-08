@@ -6,6 +6,8 @@ namespace ConfigKeys
 {
 	const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey = "Gantry_OutputCheckContainerAlignmentInSecs";
 
+	const std::string Gantry_DownLiftDelayInSecsConfigKey = "Gantry_DownLiftDelayInSecsConfigKey";
+
 	const std::string Drive_CreateGyroKey = "Drive_CreateGyro";
 
 	const std::string Drive_UseGyroKey = "Drive_UseGyro";

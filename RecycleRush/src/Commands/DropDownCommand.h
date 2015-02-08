@@ -27,4 +27,7 @@ public:
 	virtual void End();
 	virtual void Interrupted();
 
+private:
+	double m_startTime;
+
 };
