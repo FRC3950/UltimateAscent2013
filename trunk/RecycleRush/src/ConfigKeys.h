@@ -7,6 +7,7 @@ namespace ConfigKeys
 {
 	// Gantry Subsystem Keys.
 	extern const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey;
+	extern const std::string Gantry_DownLiftDelayInSecsConfigKey;
 
 	// Drive Subsystem Keys.
 	extern const std::string Drive_CreateGyroKey;
