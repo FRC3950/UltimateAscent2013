@@ -28,14 +28,24 @@ namespace DriveSubsystemConfigValueDefaults
 }
 
 enum DriveHeading {
-	Forward,
-	Back,
-	Left,
-	Right
+	DriveForward,
+	DriveBack,
+	DriveLeft,
+	DriveRight
+};
+
+enum RotateDirection {
+	RotateLeft,
+	RotateRight
+};
+
+enum AutoMode {
+	Off,
+	Driving,
+	Rotating
 };
 
 class DriveSubsystem: public Subsystem {
-private:
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
 public:
@@ -51,10 +61,16 @@ public:
 	void InitDefaultCommand();
 	void MecanumDrive(float x, float y, float twist);
 	void EnableDriveSubsystem();
-	bool AutoModeSetup(DriveHeading heading, float distance);
-	void AutoMoveExecute();
-	bool AutoAreWeThereYet();
-	bool AutoEnabled() const;
+
+	bool AutoDriveSetup(DriveHeading heading, float distance);
+	void AutoDriveExecute();
+	bool AutoDriveHasReachedLocation();
+
+	bool AutoRotateSetup(float angle, RotateDirection direction);
+	void AutoRotateExecute();
+	bool AutoHasFinishedRotating();
+
+	AutoMode AutoModeState() const;
 	void AutoModeDisable();
 
 private:
@@ -64,11 +80,17 @@ private:
 
 	float autoDriveDistenceInInches;
 
-	bool autoEnabled;
+	AutoMode autoMode;
 
-	bool autoDriving;
+	bool autoActionInProgress;
 
 	bool useGyro;
+
+	float autoRotateInputAngle;
+
+	float autoGyroTargetAngle;
+
+	RotateDirection autoRotateDirection;
 };
 
 #endif
