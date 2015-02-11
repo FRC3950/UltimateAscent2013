@@ -89,16 +89,16 @@ bool GantrySubsystem::IsRestraintApplied() const
 
 void GantrySubsystem::CloseGrip()
 {
-	leftGripSolenoid->Set(DoubleSolenoid::kReverse);
-	rightGripSolenoid->Set(DoubleSolenoid::kReverse);
-	gripClosed = true;
+	leftGripSolenoid->Set(DoubleSolenoid::kForward); //I flipped the kForward and the kReverse so that
+	rightGripSolenoid->Set(DoubleSolenoid::kForward);//OpenGrip() opens the Grip
+	gripClosed = true;								 //and CloseGrip() closes the grip
 }
 
 void GantrySubsystem::OpenGrip()
 {
 	if (!IsLiftRaised()){
-		leftGripSolenoid->Set(DoubleSolenoid::kForward);
-		rightGripSolenoid->Set(DoubleSolenoid::kForward);
+		leftGripSolenoid->Set(DoubleSolenoid::kReverse);
+		rightGripSolenoid->Set(DoubleSolenoid::kReverse);
 		gripClosed = false;
 	}
 }

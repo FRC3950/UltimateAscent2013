@@ -16,14 +16,14 @@ MoveCommand::MoveCommand(DriveHeading heading, float distanceInInches)
 // Called just before this Command runs the first time
 void MoveCommand::Initialize()
 {
-	m_setup = Robot::driveSubsystem->AutoModeSetup(m_heading, m_distanceInInches);
+	m_setup = Robot::driveSubsystem->AutoDriveSetup(m_heading, m_distanceInInches);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void MoveCommand::Execute()
 {
 	if (m_setup && !m_startedMoving) {
-		Robot::driveSubsystem->AutoMoveExecute();
+		Robot::driveSubsystem->AutoDriveExecute();
 		m_startedMoving = true;
 	}
 }
@@ -36,7 +36,7 @@ bool MoveCommand::IsFinished()
 	}
 
 
-	bool isfinished = Robot::driveSubsystem->AutoAreWeThereYet();
+	bool isfinished = Robot::driveSubsystem->AutoDriveHasReachedLocation();
 	return isfinished;
 }
 
