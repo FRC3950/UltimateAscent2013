@@ -15,9 +15,10 @@ class Logger
 public:
    typedef enum 
    {
-	  kINFO = 0,
-      kWARNING = 1, 
-      kERROR = 2 
+	  kTRACE = 0,
+	  kINFO = 1,
+      kWARNING = 2,
+      kERROR = 3
    } MessageType;
    
    static Logger* GetInstance(bool logToConsole = false, bool logToFile = false);
