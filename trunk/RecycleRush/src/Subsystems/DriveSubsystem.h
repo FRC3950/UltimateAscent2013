@@ -111,6 +111,14 @@ private:
 		// of an auto-drive.  Typically this should be zero.
 		double positionCountAtStartOfAutoDrive;
 
+		// Holds the last position read from the Talon.  Only
+		/// valid when driving is in progress.
+		double lastPositionReading;
+
+		// Holds the last calculation of distance from the goal.
+		// Used to shutdown the driving in the case of an overshoot.
+		double lastDistanceFromGoal;
+
 		// Holds the shaft count total when the desired driving position is reached.
 		double shaftCountTotalToAtDesiredPosition;
 
