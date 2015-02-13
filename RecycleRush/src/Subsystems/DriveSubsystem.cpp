@@ -470,18 +470,24 @@ void DriveSubsystem::AutoDriveExecute()
 			return;
 		}
 
-		float distanceTraveledSoFar = 0.0;
+		float distanceTraveledSoFar;
 
 		if (!autoActionState == NotStarted) {
 			// Indicate that the rotation is now in progress.
 			autoActionState = InProgress;
 
 			// here is where we would start the PID or the manual encoder code
-			cANTalon1->SetPosition(0.0);
 			SetMotorSpeeds(0.0);
+			cANTalon1->SetPosition(0.0);
+			Wait(0.100);
+			autoDrivingParams.positionCountAtStartOfAutoDrive = fabs(cANTalon1->GetPosition());
+			autoDrivingParams.lastPositionReading = autoDrivingParams.positionCountAtStartOfAutoDrive;
+			autoDrivingParams.lastDistanceFromGoal = autoDrivingParams.shaftCountTotalToAtDesiredPosition - (autoDrivingParams.lastPositionReading - autoDrivingParams.positionCountAtStartOfAutoDrive);
+			distanceTraveledSoFar = autoDrivingParams.lastDistanceFromGoal;
 		}
 		else {
-			distanceTraveledSoFar = cANTalon1->GetPosition();
+			autoDrivingParams.lastPositionReading = fabs(cANTalon1->GetPosition());
+			distanceTraveledSoFar = autoDrivingParams.lastPositionReading - autoDrivingParams.positionCountAtStartOfAutoDrive;
 		}
 
 		AutoDriveMakeProgress(distanceTraveledSoFar);
@@ -498,13 +504,17 @@ void DriveSubsystem::AutoDriveMakeProgress(float distanceTraveledSoFar) {
 	{
 		if (autoActionState == InProgress)
 		{
-			float distanceFromGoal = autoDrivingParams.shaftCountTotalToAtDesiredPosition - fabs(distanceTraveledSoFar);
+			float distanceFromGoal = autoDrivingParams.shaftCountTotalToAtDesiredPosition - distanceTraveledSoFar;
 
-			if (!DistanceWithinEpsilon(distanceFromGoal, AutoDriveTargetDistanceEpsilonInCounts))
+			// If the distance from the goal is NOT within the epsilon AND
+			// if the distance from the targeted distance has not grown
+			// since the last distance calculation apply voltage.
+			if (!DistanceWithinEpsilon(distanceFromGoal, AutoDriveTargetDistanceEpsilonInCounts) &&
+				(distanceFromGoal <= autoDrivingParams.lastDistanceFromGoal))
 			{
 				// Calculate the speed that the Robot should start rotating at.
-				float percentageOfMaxSpeed = CalcPercentageOfMaxSpeed(fabs(distanceFromGoal),
-																	  fabs(autoDrivingParams.shaftCountTotalToAtDesiredPosition),
+				float percentageOfMaxSpeed = CalcPercentageOfMaxSpeed(distanceFromGoal,
+																	  autoDrivingParams.shaftCountTotalToAtDesiredPosition,
 																	  AutoDriveSlowDownThresholdInShaftRotations);
 
 				float absoluteDriveSpeed = AutoDriveHeadingMaxSpeed * percentageOfMaxSpeed;
