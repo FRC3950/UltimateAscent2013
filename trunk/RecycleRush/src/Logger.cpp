@@ -121,6 +121,7 @@ Logger::~Logger()
 static const char *ERROR_MSG = "ERROR\t";
 static const char *WARN_MSG = "WARN\t";
 static const char *INFO_MSG = "INFO\t";
+static const char *TRACE_MSG = "TRACE\t";
 
 #if defined(LOGGER_NOT_NEEDED)
 
@@ -172,15 +173,22 @@ void Logger::LogInternal(MessageType type, const char* message, va_list args)
 	// First print the message type
 	switch (type)
 	{
-	case kERROR:
-	  msgType = ERROR_MSG;
-	  break;
-	case kWARNING:
-	  msgType = WARN_MSG;
-	  break;
+	case kTRACE:
+		msgType = TRACE_MSG;
+		break;
+
 	case kINFO:
 	  msgType = INFO_MSG;
 	  break;
+
+	case kWARNING:
+	  msgType = WARN_MSG;
+	  break;
+
+	case kERROR:
+	  msgType = ERROR_MSG;
+	  break;
+
 	default:
 	  msgType = INFO_MSG;
 	  break;

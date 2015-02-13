@@ -16,6 +16,20 @@ namespace ConfigKeys
 
 	const std::string Drive_CountsPerShaftRotationKey = "Drive_CountsPerShaftRotation";
 
+	const std::string Drive_AutoRotateMaxSpeedKey = "Drive_AutoRotateMaxSpeed";
+
+	const std::string Drive_AutoRotateSlowDownThresholdKey = "Drive_AutoRotateSlowDownThreshold";
+
+	const std::string Drive_AngleDecimalPlacesPrecisionKey = "Drive_AngleDecimalPlacesPrecision";
+
+	const std::string Drive_AutoRotateTargetAngleEpsilonKey = "Drive_AutoRotateTargetAngleEpsilon";
+
+	const std::string Drive_AutoDriveHeadingMaxSpeedKey = "Drive_AutoDriveHeadingMaxSpeed";
+
+	const std::string Drive_AutoDriveSlowDownThresholdInInchesKey = "Drive_AutoDriveSlowDownThreshold";
+
+	const std::string Drive_AutoDriveTargetDistanceEpsilonInInchesKey = "Drive_AutoDriveTargetDistanceEpsilonInInches";
+
 	const std::string Drive_EnableSafety = "Drive_EnableSafety";
 
 	const std::string Drive_SafetyTimeOut = "Drive_SafetyTimeOut";
