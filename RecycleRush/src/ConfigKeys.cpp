@@ -47,4 +47,10 @@ namespace ConfigKeys
 	const std::string Drive_XToleranceMin = "Drive_XToleranceMin";
 
 	const std::string Drive_XToleranceMax = "Drive_XToleranceMax";
+
+	const std::string Drive_SlowDownScaleFactor = "Drive_SlowDownScaleFactor";
+
+	const std::string Drive_XScaleFactor = "Drive_XScaleFactor";
+
+	const std::string Drive_YScaleFactor = "Drive_YScaleFactor";
 }

@@ -32,5 +32,9 @@ namespace ConfigKeys
 
 	extern const std::string Drive_XToleranceMin;
 	extern const std::string Drive_XToleranceMax;
+
+	extern const std::string Drive_SlowDownScaleFactor;
+	extern const std::string Drive_XScaleFactor;
+	extern const std::string Drive_YScaleFactor;
 }
 
