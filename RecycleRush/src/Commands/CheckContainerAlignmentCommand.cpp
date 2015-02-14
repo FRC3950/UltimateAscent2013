@@ -45,7 +45,7 @@ CheckContainerAlignmentCommand::CheckContainerAlignmentCommand()
 
 // Called just before this Command runs the first time
 void CheckContainerAlignmentCommand::Initialize() {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand Initialized()");
+//	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand Initialized()");
 
 }
 
@@ -58,15 +58,16 @@ void CheckContainerAlignmentCommand::Execute() {
 
 
 		SmartDashboard::PutBoolean(ContainerAlignedField, limitSwitchSet);
-
+		/*
 		Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "Container Aligned Limit Switch Set is %s",
 								   limitSwitchSet ? "TRUE" : "FALSE");
+		*/
 	}
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool CheckContainerAlignmentCommand::IsFinished() {
-	Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "CheckContainerAlignmentCommand IsFinished() called.");
+	//Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kINFO, "CheckContainerAlignmentCommand IsFinished() called.");
 	return false;
 }
 

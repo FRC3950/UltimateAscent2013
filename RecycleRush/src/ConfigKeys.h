@@ -18,7 +18,8 @@ namespace ConfigKeys
 	extern const std::string Drive_AutoRotateSlowDownThresholdKey;
 	extern const std::string Drive_AngleDecimalPlacesPrecisionKey;
 	extern const std::string Drive_AutoRotateTargetAngleEpsilonKey;
-	extern const std::string Drive_AutoDriveHeadingMaxSpeedKey;
+	extern const std::string Drive_AutoDriveFowardBackHeadingMaxSpeedKey;
+	extern const std::string Drive_AutoDriveLeftRightHeadingMaxSpeedKey;
 	extern const std::string Drive_AutoDriveSlowDownThresholdInInchesKey;
 	extern const std::string Drive_AutoDriveTargetDistanceEpsilonInInchesKey;
 	extern const std::string Drive_EnableSafety;

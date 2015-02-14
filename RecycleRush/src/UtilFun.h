@@ -21,7 +21,7 @@ inline bool InRangeInclusive(float value, float min, float max) {
 
 inline bool DistanceWithinEpsilon(double distance, double epsilon)
 {
-	return fabs(distance) < fabs(epsilon);
+	return fabs(distance) <= fabs(epsilon);
 }
 
 #endif // UTIL_FUN_H

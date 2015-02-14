@@ -24,7 +24,9 @@ namespace ConfigKeys
 
 	const std::string Drive_AutoRotateTargetAngleEpsilonKey = "Drive_AutoRotateTargetAngleEpsilon";
 
-	const std::string Drive_AutoDriveHeadingMaxSpeedKey = "Drive_AutoDriveHeadingMaxSpeed";
+	const std::string Drive_AutoDriveFowardBackHeadingMaxSpeedKey = "Drive_AutoDriveForwardBackHeadingMaxSpeed";
+
+	const std::string Drive_AutoDriveLeftRightHeadingMaxSpeedKey = "Drive_AutoDriveLeftRightHeadingMaxSpeed";
 
 	const std::string Drive_AutoDriveSlowDownThresholdInInchesKey = "Drive_AutoDriveSlowDownThreshold";
 
