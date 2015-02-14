@@ -28,6 +28,9 @@ private:
 	JoystickButton*	openGripButton;
 	JoystickButton*	closeGripButton;
 	JoystickButton*	toggleGripButton;
+	JoystickButton* autoTestButton;
+	JoystickButton* rightAutoTestButton;
+	JoystickButton* leftAutoTestButton;
 	JoystickButton* slowDownButton;
 
 	SlowModeCommand *slowModeCommand;

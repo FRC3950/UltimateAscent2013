@@ -53,7 +53,7 @@ bool GantrySubsystem::CheckContainerAlignedLimitSwitch() {
 
 	if (limitHit)
 	{
-		Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kWARNING, "*** Container Aligned Limit Switch Hit ***");
+//		Logger::GetInstance()->Log(GantrySubsystemLogId, Logger::kWARNING, "*** Container Aligned Limit Switch Hit ***");
 	}
 
 	return limitHit;

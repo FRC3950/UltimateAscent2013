@@ -89,9 +89,13 @@ static float AngleDecimalPlacesPrecision = ANGLE_DECIMAL_PLACES_PRECISION_DEFAUL
 static const float AUTO_ROTATE_TARGET_ANGLE_EPSILON_DEFAULT = 2.0;
 static float AutoRotate_TargetAngle_Epsilon = AUTO_ROTATE_TARGET_ANGLE_EPSILON_DEFAULT;
 
-// Maximum speed to use when performing and AutoDrive in any direction.
-static const float AUTO_DRIVE_HEADING_MAX_SPEED_DEFAULT = 1.0;
-static float AutoDriveHeadingMaxSpeed = AUTO_DRIVE_HEADING_MAX_SPEED_DEFAULT;
+// Maximum speed to use when performing and AutoDrive in the forward/back direction.
+static const float AUTO_DRIVE_FORWARD_BACK_HEADING_MAX_SPEED_DEFAULT = 0.5;
+static float AutoDriveForwardBackHeadingMaxSpeed = AUTO_DRIVE_FORWARD_BACK_HEADING_MAX_SPEED_DEFAULT;
+
+// Maximum speed to use when performing and AutoDrive in the left/right direction.
+static const float AUTO_DRIVE_LEFT_RIGHT_HEADING_MAX_SPEED_DEFAULT = 0.5;
+static float AutoDriveLeftRightHeadingMaxSpeed = AUTO_DRIVE_LEFT_RIGHT_HEADING_MAX_SPEED_DEFAULT;
 
 // This constant is used as the threshold to begin slowing down the robot
 // when it is auto-driving and there is 24 inches or less to go in the
@@ -151,7 +155,10 @@ static const bool RotateDirectionValid(RotateDirection direction) {
 	}
 }
 
-static const double LateralDistanceMultipler = 2.0;
+static const double LateralDistanceMultipler = 1.0;
+
+static const double CountsPerInch = 80.9;
+static const double ShaftCountErrorFactor = 344.1;
 
 static double DistanceToShaftRotationCount(int distanceToTravelInInches, DriveHeading heading)
 {
@@ -160,8 +167,12 @@ static double DistanceToShaftRotationCount(int distanceToTravelInInches, DriveHe
 		return 0.0;
 	}
 
+	/*
 	double shaftRotationCountTarget = distanceToTravelInInches / WheelCircumference;
 	shaftRotationCountTarget *= CountsPerShaftRotation;
+	*/
+
+	double shaftRotationCountTarget = (CountsPerInch * distanceToTravelInInches) - ShaftCountErrorFactor;
 
 	if ((heading == DriveLeft) || (heading == DriveRight))
 	{
@@ -209,7 +220,9 @@ static void InitDriveSubsystemConfiguration()
 
 		AutoRotate_TargetAngle_Epsilon = static_cast<float>(configMgr->getDoubleVal(ConfigKeys::Drive_AutoRotateTargetAngleEpsilonKey, AUTO_ROTATE_TARGET_ANGLE_EPSILON_DEFAULT));
 
-		AutoDriveHeadingMaxSpeed = static_cast<float>(configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveHeadingMaxSpeedKey, AUTO_DRIVE_HEADING_MAX_SPEED_DEFAULT));
+		AutoDriveForwardBackHeadingMaxSpeed = static_cast<float>(configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveFowardBackHeadingMaxSpeedKey, AUTO_DRIVE_FORWARD_BACK_HEADING_MAX_SPEED_DEFAULT));
+
+		AutoDriveLeftRightHeadingMaxSpeed = static_cast<float>(configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveLeftRightHeadingMaxSpeedKey, AUTO_DRIVE_LEFT_RIGHT_HEADING_MAX_SPEED_DEFAULT));
 
 		AutoDriveSlowDownThresholdInInches = static_cast<float>(configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveSlowDownThresholdInInchesKey, AUTO_DRIVE_SLOW_DOWN_THRESHOLD_IN_INCHES_DEFAULT));
 
@@ -230,13 +243,15 @@ static void InitDriveSubsystemConfiguration()
 		logger->Log(DriveSubsystemLogId,Logger::kINFO, "DriveSubsystem: Counts Per Shaft Rotation = %d inches\n", CountsPerShaftRotation);
 
 		logger->Log(DriveSubsystemLogId,Logger::kINFO, "DriveSubsystem: Wheel Diameter = %d inches, Circumference = %g\n",
-      							   WheelDiameterInInches, WheelCircumference);
+      				WheelDiameterInInches, WheelCircumference);
 
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoRotateMaxSpeed = %f\n", AutoRotateMaxSpeed);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoRotateAnglePrecision = %f\n", AngleDecimalPlacesPrecision);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoRotateTargetAngleEpsilon = %f\n", AutoRotate_TargetAngle_Epsilon);
 
-		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveHeadingMaxSpeed = %f\n", AutoDriveHeadingMaxSpeed);
+		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveForwardBackHeadingMaxSpeed = %f\n", AutoDriveForwardBackHeadingMaxSpeed);
+		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveLeftRightHeadingMaxSpeed = %f\n", AutoDriveLeftRightHeadingMaxSpeed);
+
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveSlowDownThresholdInInches = %f\n", AutoDriveSlowDownThresholdInInches);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveSlowDownThresholdInShaftRotations = %f\n", AutoDriveSlowDownThresholdInShaftRotations);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveTargetDistanceEpsilonInInches = %f\n", AutoDriveTargetDistanceEpsilonInInches);
@@ -506,18 +521,21 @@ void DriveSubsystem::AutoDriveExecute()
 
 		double distanceTraveledSoFar;
 
-		if (!autoActionState == NotStarted) {
+		if (autoActionState == NotStarted) {
 			// Indicate that the rotation is now in progress.
 			autoActionState = InProgress;
 
 			// here is where we would start the PID or the manual encoder code
 			SetMotorSpeeds(0.0);
 			cANTalon1->SetPosition(0.0);
+			cANTalon2->SetPosition(0.0);
+			cANTalon3->SetPosition(0.0);
+			cANTalon4->SetPosition(0.0);
 			Wait(0.100);
 			autoDrivingParams.positionCountAtStartOfAutoDrive = fabs(cANTalon1->GetPosition());
 			autoDrivingParams.lastPositionReading = autoDrivingParams.positionCountAtStartOfAutoDrive;
 			autoDrivingParams.lastDistanceFromGoal = autoDrivingParams.totalRotationsToDesiredPosition - (autoDrivingParams.lastPositionReading - autoDrivingParams.positionCountAtStartOfAutoDrive);
-			distanceTraveledSoFar = autoDrivingParams.lastDistanceFromGoal;
+			distanceTraveledSoFar = 0.0;
 
 			Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO,"AutoDriveExecute: Switching to InProgress, (position, lastPostion)=%g, lastDistance=%gMode\n",
 									   autoDrivingParams.lastPositionReading,
@@ -545,23 +563,43 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar) {
 	// or we can find the shortest distance by comparing the
 	if (autoMode == Driving)
 	{
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 1");
 		if (autoActionState == InProgress)
 		{
 			double distanceFromGoal = autoDrivingParams.totalRotationsToDesiredPosition - distanceTraveledSoFar;
 
-			bool reachedTarget = DistanceWithinEpsilon(distanceFromGoal, AutoDriveTargetDistanceEpsilonInCounts);
+			bool reachedTarget = (distanceFromGoal <= 0) ? true : false; //DistanceWithinEpsilon(distanceFromGoal, AutoDriveTargetDistanceEpsilonInCounts);
+
+			Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 2: distanceFromGoal=%g, lastDistanceFromGoal=%g, reachedTarget=%s\n",
+									   distanceFromGoal, autoDrivingParams.lastDistanceFromGoal, reachedTarget ? "TRUE" : "FALSE");
 
 			// If the distance from the goal is NOT within the epsilon AND
 			// if the distance from the targeted distance has not grown
 			// since the last distance calculation apply voltage.
 			if (!reachedTarget && (distanceFromGoal <= autoDrivingParams.lastDistanceFromGoal)) {
 
+				Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 3");
+
 				// Calculate the speed that the Robot should start rotating at.
+				float percentageOfMaxSpeed = 1.0;
+
+				/*
 				float percentageOfMaxSpeed = CalcPercentageOfMaxSpeed(distanceFromGoal,
 																	  autoDrivingParams.totalRotationsToDesiredPosition,
 																	  AutoDriveSlowDownThresholdInShaftRotations);
+				*/
+				float absoluteDriveSpeed;
 
-				float absoluteDriveSpeed = AutoDriveHeadingMaxSpeed * percentageOfMaxSpeed;
+				if ((autoDrivingParams.autoHeading == DriveForward) || (autoDrivingParams.autoHeading == DriveBack))
+				{
+					absoluteDriveSpeed = AutoDriveForwardBackHeadingMaxSpeed;
+				}
+				else
+				{
+					absoluteDriveSpeed = AutoDriveLeftRightHeadingMaxSpeed;
+				}
+
+				absoluteDriveSpeed *= percentageOfMaxSpeed;
 
 				Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO,"AutoDriveMakeProgress: InProgress, distanceFromGoal=%g, distanceSoFar=%g, absDriveSpeed=%f\n",
 										   distanceFromGoal,
@@ -571,25 +609,35 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar) {
 				switch (autoDrivingParams.autoHeading)
 				{
 				case DriveForward:
-					SetMotorSpeeds(absoluteDriveSpeed);
-					break;
-
-				case DriveBack:
-					SetMotorSpeeds(-absoluteDriveSpeed);
-					break;
-
-				case DriveLeft:
-					SetMotorSpeeds(absoluteDriveSpeed,
+					Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO,"AutoDriveMakeProgress: Heading Forward\n");
+					SetMotorSpeeds(-absoluteDriveSpeed,
 								   -absoluteDriveSpeed,
-								   -absoluteDriveSpeed,
+								   absoluteDriveSpeed,
 								   absoluteDriveSpeed);
 					break;
 
-				case DriveRight:
-					SetMotorSpeeds(-absoluteDriveSpeed,
+				case DriveBack:
+					Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO,"AutoDriveMakeProgress: Heading Backward\n");
+					SetMotorSpeeds(absoluteDriveSpeed,
 								   absoluteDriveSpeed,
+								  -absoluteDriveSpeed,
+								  -absoluteDriveSpeed);
+					break;
+
+				case DriveLeft:
+					Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO,"AutoDriveMakeProgress: Heading Left\n");
+					SetMotorSpeeds(absoluteDriveSpeed,
+								   -absoluteDriveSpeed,
 								   absoluteDriveSpeed,
 								   -absoluteDriveSpeed);
+					break;
+
+				case DriveRight:
+					Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO,"AutoDriveMakeProgress: Heading Right\n");
+					SetMotorSpeeds(-absoluteDriveSpeed,
+								   absoluteDriveSpeed,
+								   -absoluteDriveSpeed,
+								   absoluteDriveSpeed);
 					break;
 				}
 			}
@@ -826,15 +874,15 @@ void DriveSubsystem::SetMotorSpeeds(float frontLeftMotorSpeed,
 									float frontRightMotorSpeed,
 									float rearRightMotorSpeed) {
 	cANTalon1->Set(frontLeftMotorSpeed);
+	cANTalon4->Set(rearRightMotorSpeed);
 	cANTalon2->Set(rearLeftMotorSpeed);
-	cANTalon2->Set(frontRightMotorSpeed);
-	cANTalon3->Set(rearRightMotorSpeed);
+	cANTalon3->Set(frontRightMotorSpeed);
 }
 
 void DriveSubsystem::SetMotorSpeeds(float speed)
 {
 	cANTalon1->Set(speed);
-	cANTalon2->Set(speed);
+	cANTalon4->Set(speed);
 	cANTalon2->Set(speed);
 	cANTalon3->Set(speed);
 }

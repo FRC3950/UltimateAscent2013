@@ -473,6 +473,8 @@ CsvConfigFileReader::TokenType CsvConfigFileReader::getNextToken(std::string &to
             }
             
             // Return the token as it stands.
+
+            trim(token);
             return tokenType;
         }
         else
