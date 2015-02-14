@@ -22,7 +22,7 @@
 
 namespace RobotMapConfigValueDefaults
 {
-	const bool Drive_CreateGyroDefaultValue = false;
+	const bool Drive_CreateGyroDefaultValue = true;
 }
 
 class RobotMap {

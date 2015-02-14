@@ -31,8 +31,12 @@ void DriveCommand::Execute() {
 	float x = Robot::oi->GetDriveStickX();
 	float y = Robot::oi->GetDriveStickY();
 	float twist = Robot::oi->GetDriveRotation();
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "drive joyStick values(x,y,twist)=(%f, %f, %f)", x, y, twist);
-	Robot::driveSubsystem->MecanumDrive(x, y, twist);
+	bool slowModeEnabled = Robot::oi->GetSlowDownEnabled();
+
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand: drive joyStick values(x,y,twist,slowMode)=(%f, %f, %f,%s)",
+							   x, y, twist, slowModeEnabled ? "TRUE" : "FALSE");
+
+	Robot::driveSubsystem->MecanumDrive(x, y, twist, slowModeEnabled);
 }
 
 // Make this return true when this Command no longer needs to run execute()

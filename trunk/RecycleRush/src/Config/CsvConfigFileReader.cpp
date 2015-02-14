@@ -16,8 +16,13 @@
 #include <sstream>
 #include <vector>
 
+
 #include "ConfigFileException.h"
 #include "StringUtils.h"
+
+#include "../Logger.h"
+#include "../LoggingComponentDefs.h"
+
 
 namespace
 {
@@ -330,6 +335,10 @@ bool CsvConfigFileReader::getNextConfigItem(std::string &itemName, Variant &valu
     
     if (state == Done)
     {
+
+    	Logger::GetInstance()->Log(ConfigurationId, Logger::kTRACE, "CSVConfigFileReader: Parsed Line into \"%s\", \"%s\", \"%s\"",
+    			                   tokens[0].c_str(), tokens[1].c_str(), tokens[2].c_str());
+
         setVariantFromData(value,
                            tokens[1],           // Type is in index one of the tokens array.
                            tokens[2],           // Value is in index two of the tokens array;
