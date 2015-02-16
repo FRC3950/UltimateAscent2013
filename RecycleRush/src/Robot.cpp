@@ -13,8 +13,10 @@
 
 #include "Logger.h"
 #include "LoggingComponentDefs.h"
-#include "Commands/AutonomousCommand.h"
-#include "Commands/AutonomousCommand2.h"
+#include "Commands/Autonomous_1CS2_Command.h"
+#include "Commands/Autonomous_1RS_Command.h"
+#include "Commands/Autonomous_1TS_Command.h"
+#include "Commands/Autonomous_3SS_Command.h"
 #include "Config/CsvConfigFileReader.h"
 #include "Config/ConfigInstanceMgr.h"
 
@@ -61,8 +63,11 @@ void Robot::RobotInit() {
 	lw = LiveWindow::GetInstance();
 
 	autonomousChooser = new SendableChooser();
-	autonomousChooser->AddDefault("Autonomous #1", new AutonomousCommand());
-	autonomousChooser->AddObject("Autonomous #2", new AutonomousCommand2());
+	autonomousChooser->AddDefault("Autonomous_1RS_Command", new Autonomous_1RS_Command());
+	autonomousChooser->AddObject("Autonomous_1TS_Command", new Autonomous_1TS_Command());
+	autonomousChooser->AddObject("Autonomous_3SS_Command", new Autonomous_3SS_Command());
+	autonomousChooser->AddObject("Autonomous_1CS2_Command", new Autonomous_1CS2_Command());
+
 	SmartDashboard::PutData("Autonomous Modes", autonomousChooser);
 
 	// instantiate the command used for the autonomous period
