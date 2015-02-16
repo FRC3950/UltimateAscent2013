@@ -4,16 +4,16 @@
 #include "Logging.h"
 
 
-AutoDriveCommand::AutoDriveCommand(DriveHeading heading, float distanceInInches)
-	: autoDriveIsSetup(false)
+AutoDriveCommand::AutoDriveCommand(DriveHeading heading, float distanceInInches, float speedScaleFactor)
+	: driveHeading(heading),
+	  distanceToDriveInInches(distanceInInches),
+	  motorSpeedScaleFactor(speedScaleFactor),
+	  autoDriveIsSetup(false)
 {
 	// Use Requires() here to declare subsystem dependencies
 	Requires(Robot::driveSubsystem);
 
 	SetInterruptible(true);
-
-	this->driveHeading = heading;
-	this->distanceInInches = distanceInInches;
 }
 
 // Called just before this Command runs the first time
@@ -32,7 +32,7 @@ void AutoDriveCommand::Execute()
 
 	if (!autoDriveIsSetup)
 	{
-		autoDriveIsSetup = Robot::driveSubsystem->AutoDriveSetup(driveHeading, distanceInInches);
+		autoDriveIsSetup = Robot::driveSubsystem->AutoDriveSetup(driveHeading, distanceToDriveInInches, motorSpeedScaleFactor);
 
 		if (!autoDriveIsSetup)
 		{

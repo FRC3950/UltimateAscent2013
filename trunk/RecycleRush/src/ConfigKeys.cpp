@@ -4,6 +4,24 @@
 
 namespace ConfigKeys
 {
+	const std::string Auto1RS_MoveLeftDistance_Key = "Auto1RS_MoveLeftDistance";
+
+	const std::string Auto1TS_MoveForwardDistance_Key = "Auto1TS_MoveForwardDistance";
+	const std::string Auto1TS_MoveLeftDistance_Key = "Auto1TS_MoveLeftDistance";
+
+	const std::string Auto3SS_MoveRightDistanceKey1 = "Auto3SS_MoveRightDistance1";
+	const std::string Auto3SS_MoveRightDistanceKey2 = "Auto3SS_MoveRightDistance2";
+	const std::string Auto3SS_MoveForwardDistanceKey1 = "Auto3SS_MoveForwardDistance1";
+	const std::string Auto3SS_MoveForwardDistanceKey2 = "Auto3SS_MoveForwardDistance2";
+	const std::string Auto3SS_MoveLeftDistanceKey1 = "Auto3SS_MoveLeftDistance1";
+
+	const std::string Auto1CS2_MoveLeftDistanceKey = "Auto1CS2_MoveLeftDistance";
+	const std::string Auto1CS2_MoveBackDistanceKey = "Auto1CS2_MoveBackDistance";
+	const std::string Auto1CS2_MoveRightDistanceKey1 = "Auto1CS2_MoveRightDistance1";
+	const std::string Auto1CS2_MoveForwardDistanceKey = "Auto1CS2_MoveForwardDistance";
+	const std::string Auto1CS2_MoveRightDistanceKey2 = "Auto1CS2_MoveRightDistance2";
+
+
 	const std::string Gantry_OutputCheckContainerAlignmentInSecsConfigKey = "Gantry_OutputCheckContainerAlignmentInSecs";
 
 	const std::string Gantry_DownLiftDelayInSecsConfigKey = "Gantry_DownLiftDelayInSecsConfigKey";
@@ -24,9 +42,11 @@ namespace ConfigKeys
 
 	const std::string Drive_AutoRotateTargetAngleEpsilonKey = "Drive_AutoRotateTargetAngleEpsilon";
 
-	const std::string Drive_AutoDriveFowardBackHeadingMaxSpeedKey = "Drive_AutoDriveForwardBackHeadingMaxSpeed";
+	const std::string Drive_AutoDriveUseOneMotorForDistanceDriveKey = "Drive_AutoDriveUseOneMotorForDistanceDrive";
 
-	const std::string Drive_AutoDriveLeftRightHeadingMaxSpeedKey = "Drive_AutoDriveLeftRightHeadingMaxSpeed";
+	const std::string Drive_AutoDriveFowardBackHeadingSpeedScaleFactorKey = "Drive_AutoDriveForwardBackHeadingSpeedScaleFactor";
+
+	const std::string Drive_AutoDriveLeftRightHeadingSpeedScaleFactorKey = "Drive_AutoDriveLeftRightHeadingSpeedScaleFactor";
 
 	const std::string Drive_AutoDriveSlowDownThresholdInInchesKey = "Drive_AutoDriveSlowDownThreshold";
 
@@ -55,4 +75,12 @@ namespace ConfigKeys
 	const std::string Drive_XScaleFactor = "Drive_XScaleFactor";
 
 	const std::string Drive_YScaleFactor = "Drive_YScaleFactor";
+
+	const std::string Drive_AutoDriveFrontLeftSpeedKey = "Drive_AutoDriveFrontLeftSpeed";
+
+	const std::string Drive_AutoDriveFrontRightSpeedKey = "Drive_AutoDriveFrontRightSpeed";
+
+	const std::string Drive_AutoDriveBackLeftSpeedKey = "Drive_AutoDriveBackLeftSpeed";
+
+	const std::string Drive_AutoDriveBackRightSpeedKey = "Drive_AutoDriveBackRightSpeed";
 }

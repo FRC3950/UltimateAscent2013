@@ -71,6 +71,8 @@ public:
 	void EnableDriveSubsystem();
 
 	bool AutoDriveSetup(DriveHeading heading, float distance);
+	bool AutoDriveSetup(DriveHeading heading, float distance, double speedScaleFactor);
+
 	void AutoDriveExecute();
 	bool AutoDriveHasReachedLocation();
 
@@ -85,7 +87,15 @@ private:
 	void SetSafetyMode(CANTalon* motor, bool enabled, float timeout = 0.0);
 
 	void AutoRotateMakeProgress(float gyroAngle);
-	void AutoDriveMakeProgress(double distanceTraveled);
+	void AutoDriveMakeProgress(double distanceTraveled[]);
+
+	void AutoDriveReadMotorRotationCounts();
+
+	void AutoDriveCalcDistanceFromGoal(double distanceTraveledSoFar[],
+									   double distanceResult[]) const;
+
+
+	bool AutoDriveShouldStop(double distanceFromGoal[]) const;
 
 	void SetMotorSpeeds(float frontLeftMotorSpeed,
 						float rearLeftMotorSpeed,
@@ -109,15 +119,15 @@ private:
 
 		// Holds the position of the talon being monitored at the start
 		// of an auto-drive.  Typically this should be zero.
-		double positionCountAtStartOfAutoDrive;
+		double positionCountAtStartOfAutoDrive[4];
 
-		// Holds the last position read from the Talon.  Only
+		// Holds the last position read from the Talon(s).  Only
 		/// valid when driving is in progress.
-		double lastPositionReading;
+		double lastPositionReading[4];
 
 		// Holds the last calculation of distance from the goal.
 		// Used to shutdown the driving in the case of an overshoot.
-		double lastDistanceFromGoal;
+		double lastDistanceFromGoal[4];
 
 		// Holds the shaft count total when the desired driving position is reached.
 		double totalRotationsToDesiredPosition;
@@ -126,7 +136,8 @@ private:
 		// to drive expressed in inches.
 		float autoDriveDistanceInInches;
 
-		float motorSpeeds[4];
+		// Optional scaling factor for the speed of the movement.
+		float speedScaleFactor;
 	};
 
 	// Holds all the parameters for a rotation.

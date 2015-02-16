@@ -11,7 +11,7 @@
 class AutoDriveCommand: public CommandBase
 {
 public:
-	AutoDriveCommand(DriveHeading heading, float distanceInInches);
+	AutoDriveCommand(DriveHeading heading, float distanceInInches, float speedScaleFactor = 1.0);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
@@ -20,7 +20,8 @@ public:
 
 private:
 	DriveHeading driveHeading;
-	float distanceInInches;
+	float distanceToDriveInInches;
+	float motorSpeedScaleFactor;
 	bool autoDriveIsSetup;
 };
 
