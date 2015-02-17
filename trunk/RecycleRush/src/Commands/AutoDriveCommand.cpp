@@ -72,6 +72,8 @@ void AutoDriveCommand::End()
 // subsystems is scheduled to run
 void AutoDriveCommand::Interrupted()
 {
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kERROR,"AutoDriveCommand: Interrupted.  Canceling Command.\n");
+
 	Robot::driveSubsystem->AutoModeDisable();
 	autoDriveIsSetup = false;
 }

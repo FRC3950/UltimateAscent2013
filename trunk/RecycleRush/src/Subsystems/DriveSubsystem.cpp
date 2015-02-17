@@ -120,17 +120,17 @@ static float AutoDriveTargetDistanceEpsilonInCounts = -1.0;
 static const bool DRIVE_SAFETY_ENABLED_DEFAULT = false;
 static const float DRIVE_SAFETY_TIME_OUT_DEFAULT = 1.0;
 
-static const float AUTO_DRIVE_FRONT_LEFT_SPEED_DEFAULT = 0.5;
-static float AutoDriveFrontLeftMotorSpeed = 0.5;
+static const float AUTO_DRIVE_FRONT_LEFT_SPEED_DEFAULT = 0.75;
+static float AutoDriveFrontLeftMotorSpeed = AUTO_DRIVE_FRONT_LEFT_SPEED_DEFAULT;
 
-static const float AUTO_DRIVE_FRONT_RIGHT_SPEED_DEFAULT = 0.5;
-static float AutoDriveFrontRightMotorSpeed = 0.5;
+static const float AUTO_DRIVE_FRONT_RIGHT_SPEED_DEFAULT = 0.75;
+static float AutoDriveFrontRightMotorSpeed = AUTO_DRIVE_FRONT_RIGHT_SPEED_DEFAULT;
 
-static const float AUTO_DRIVE_BACK_LEFT_SPEED_DEFAULT = 0.5;
-static float AutoDriveBackLeftMotorSpeed = 0.5;
+static const float AUTO_DRIVE_BACK_LEFT_SPEED_DEFAULT = 0.75;
+static float AutoDriveBackLeftMotorSpeed = AUTO_DRIVE_BACK_LEFT_SPEED_DEFAULT;
 
-static const float AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT = 0.5;
-static float AutoDriveBackRightMotorSpeed = 0.5;
+static const float AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT = 0.75;
+static float AutoDriveBackRightMotorSpeed = AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT;
 
 static const std::string ForwardHeading = "Forward";
 static const std::string BackHeading = "Back";
@@ -635,12 +635,14 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar[]) {
 
 			AutoDriveCalcDistanceFromGoal(distanceTraveledSoFar, distanceFromGoal);
 
+			Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 2");
+
 			// If the distance from the goal is NOT within the epsilon AND
 			// if the distance from the targeted distance has not grown
 			// since the last distance calculation apply voltage.
 			if (!AutoDriveShouldStop(distanceFromGoal)) {
 
-				Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 2");
+				Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 3");
 
 				// Calculate the speed that the Robot should start rotating at.
 
@@ -725,7 +727,11 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar[]) {
 void DriveSubsystem::AutoDriveCalcDistanceFromGoal(double distanceTraveledSoFar[],
 												   double distanceResult[]) const
 {
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveCalcDistanceFromGoal:: Step 1");
+
 	distanceResult[0] = autoDrivingParams.totalRotationsToDesiredPosition - distanceTraveledSoFar[0];
+
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveCalcDistanceFromGoal:: Step 2");
 
 	if (!AutoDriveUseOneMotorForDistanceDrive)
 	{
@@ -733,16 +739,24 @@ void DriveSubsystem::AutoDriveCalcDistanceFromGoal(double distanceTraveledSoFar[
 		distanceResult[2] = autoDrivingParams.totalRotationsToDesiredPosition - distanceTraveledSoFar[2];
 		distanceResult[3] = autoDrivingParams.totalRotationsToDesiredPosition - distanceTraveledSoFar[3];
 	}
+
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveCalcDistanceFromGoal:: Step 3");
+
 }
 
 bool DriveSubsystem::AutoDriveShouldStop(double distanceFromGoal[]) const
 {
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 1");
+
 	if (AutoDriveUseOneMotorForDistanceDrive)
 	{
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 2 - One Motor.");
 		bool result = (distanceFromGoal[0] <= 0) || (distanceFromGoal[0] > autoDrivingParams.lastDistanceFromGoal[0]);
 
 		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: distanceFromGoal[0]=%g, lastDistanceFromGoal[0]=%g,stopping=%s\n",
-								   distanceFromGoal[0], autoDrivingParams.lastDistanceFromGoal, result ? "TRUE" : "FALSE");
+								   distanceFromGoal[0], autoDrivingParams.lastDistanceFromGoal[0], result ? "TRUE" : "FALSE");
+
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 3 - One Motor.");
 
 		return result;
 	}
@@ -760,9 +774,10 @@ bool DriveSubsystem::AutoDriveShouldStop(double distanceFromGoal[]) const
 			// the Talons that have a non-zero distance to travel, that they've
 			// actually made progress on the distance they need to close.  If
 			// any one of them has not, stop.
+			/*
 			for (int i2 = 0; i < 4; ++i2)
 			{
-				if ((distanceFromGoal[i2] >= 0) && (distanceFromGoal[i2] > autoDrivingParams.lastDistanceFromGoal[i2]))
+				if ((distanceFromGoal[i2]  0) && (distanceFromGoal[i2] > autoDrivingParams.lastDistanceFromGoal[i2]))
 				{
 					Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: STOPPING because of INCREASING DISTANCE: Motor%d - distanceFromGoal=%g, lastDistanceFromGoal=%g\n",
 											   i2, distanceFromGoal[i2], autoDrivingParams.lastDistanceFromGoal[i2]);
@@ -770,6 +785,7 @@ bool DriveSubsystem::AutoDriveShouldStop(double distanceFromGoal[]) const
 					return true;
 				}
 			}
+			*/
 
 			Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: NOT STOPPING: Motor%d has distance=%g to go.\n",
 									   i, distanceFromGoal[i]);

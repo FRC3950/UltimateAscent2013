@@ -65,7 +65,7 @@ OI::OI()
 	openGripButton->WhenPressed(new OpenGripCommand());
 	closeGripButton->WhenPressed(new CloseGripCommand());
 
-	autoTestButton->WhenPressed(new AutoDriveCommand(DriveForward, 180));
+	autoTestButton->WhenPressed(new AutoDriveCommand(DriveForward, 36));
 	rightAutoTestButton->WhenPressed(new AutoDriveCommand(DriveRight, 192));
 	leftAutoTestButton->WhenPressed(new AutoDriveCommand(DriveLeft, 192));
 
