@@ -24,4 +24,14 @@ inline bool DistanceWithinEpsilon(double distance, double epsilon)
 	return fabs(distance) <= fabs(epsilon);
 }
 
+inline double ImposeMinimumOnValue(double value, double minValue)
+{
+	if (value < minValue)
+	{
+		value = minValue;
+	}
+
+	return value;
+}
+
 #endif // UTIL_FUN_H

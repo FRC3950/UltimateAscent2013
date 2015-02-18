@@ -14,7 +14,7 @@
 #include "../ConfigKeys.h"
 #include "../Config/ConfigInstanceMgr.h"
 
-const double DownCompletionDelayTimeDefault = 0.200;
+const double DownCompletionDelayTimeDefault = 0.025;
 
 static bool configInit = false;
 static double downCompletionDelayTime = DownCompletionDelayTimeDefault;

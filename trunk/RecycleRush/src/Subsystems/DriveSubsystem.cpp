@@ -123,13 +123,13 @@ static const float DRIVE_SAFETY_TIME_OUT_DEFAULT = 1.0;
 static const float AUTO_DRIVE_FRONT_LEFT_SPEED_DEFAULT = 0.75;
 static float AutoDriveFrontLeftMotorSpeed = AUTO_DRIVE_FRONT_LEFT_SPEED_DEFAULT;
 
-static const float AUTO_DRIVE_FRONT_RIGHT_SPEED_DEFAULT = 0.75;
+static const float AUTO_DRIVE_FRONT_RIGHT_SPEED_DEFAULT = 0.7;
 static float AutoDriveFrontRightMotorSpeed = AUTO_DRIVE_FRONT_RIGHT_SPEED_DEFAULT;
 
 static const float AUTO_DRIVE_BACK_LEFT_SPEED_DEFAULT = 0.75;
 static float AutoDriveBackLeftMotorSpeed = AUTO_DRIVE_BACK_LEFT_SPEED_DEFAULT;
 
-static const float AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT = 0.75;
+static const float AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT = 0.7;
 static float AutoDriveBackRightMotorSpeed = AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT;
 
 static const std::string ForwardHeading = "Forward";
@@ -602,6 +602,7 @@ void DriveSubsystem::AutoDriveExecute()
 
 			distanceTraveledSoFar[0] = autoDrivingParams.lastPositionReading[0] - autoDrivingParams.positionCountAtStartOfAutoDrive[0];
 
+			distanceTraveledSoFar[0] = ImposeMinimumOnValue(distanceTraveledSoFar[0], 0.0);
 
 			Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO,"AutoDriveExecute: InProgress, lastPostion=%g, distanceSoFar=%g, prevDistance=%g\n",
 									   autoDrivingParams.lastPositionReading[0],
@@ -610,9 +611,9 @@ void DriveSubsystem::AutoDriveExecute()
 
 			if (!AutoDriveUseOneMotorForDistanceDrive)
 			{
-				distanceTraveledSoFar[1] = autoDrivingParams.lastPositionReading[1] - autoDrivingParams.positionCountAtStartOfAutoDrive[1];
-				distanceTraveledSoFar[2] = autoDrivingParams.lastPositionReading[2] - autoDrivingParams.positionCountAtStartOfAutoDrive[2];
-				distanceTraveledSoFar[3] = autoDrivingParams.lastPositionReading[3] - autoDrivingParams.positionCountAtStartOfAutoDrive[3];
+				distanceTraveledSoFar[1] = ImposeMinimumOnValue(autoDrivingParams.lastPositionReading[1] - autoDrivingParams.positionCountAtStartOfAutoDrive[1], 0.0);
+				distanceTraveledSoFar[2] = ImposeMinimumOnValue(autoDrivingParams.lastPositionReading[2] - autoDrivingParams.positionCountAtStartOfAutoDrive[2], 0.0);
+				distanceTraveledSoFar[3] = ImposeMinimumOnValue(autoDrivingParams.lastPositionReading[3] - autoDrivingParams.positionCountAtStartOfAutoDrive[3], 0.0);
 			}
 		}
 
@@ -750,8 +751,11 @@ bool DriveSubsystem::AutoDriveShouldStop(double distanceFromGoal[]) const
 
 	if (AutoDriveUseOneMotorForDistanceDrive)
 	{
+		const double AUTO_DRIVE_INCREASED_DISTANCE_EPSILON = 24.0;
+
 		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 2 - One Motor.");
-		bool result = (distanceFromGoal[0] <= 0) || (distanceFromGoal[0] > autoDrivingParams.lastDistanceFromGoal[0]);
+		bool result = (distanceFromGoal[0] <= 0) || ((distanceFromGoal[0] - autoDrivingParams.lastDistanceFromGoal[0]) > AUTO_DRIVE_INCREASED_DISTANCE_EPSILON);
+		//bool result = (distanceFromGoal[0] <= 0) || (distanceFromGoal[0] > autoDrivingParams.lastDistanceFromGoal[0]);
 
 		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: distanceFromGoal[0]=%g, lastDistanceFromGoal[0]=%g,stopping=%s\n",
 								   distanceFromGoal[0], autoDrivingParams.lastDistanceFromGoal[0], result ? "TRUE" : "FALSE");

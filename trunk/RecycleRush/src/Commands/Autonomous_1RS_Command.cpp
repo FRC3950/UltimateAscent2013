@@ -10,7 +10,7 @@
 #include "../ConfigKeys.h"
 #include "../Config/ConfigInstanceMgr.h"
 
-static const double Auto1RS_MoveLeftDistanceDefault = 60;
+static const double Auto1RS_MoveLeftDistanceDefault = 150;
 
 Autonomous_1RS_Command::Autonomous_1RS_Command()
 {
