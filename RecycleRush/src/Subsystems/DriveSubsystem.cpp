@@ -521,11 +521,14 @@ bool DriveSubsystem::AutoDriveSetup(DriveHeading heading, float distance, double
 	if (autoMode == Off) {
 		if (DriveHeadingValid(heading) && (distance > 0.0) && (speedScaleFactor > 0.0))
 		{
+			const double AutoDriveSlowDownPercentage = .90;
+
 			autoMode = Driving;
 			autoActionState = NotStarted;
 			autoDrivingParams.autoHeading = heading;
 			autoDrivingParams.autoDriveDistanceInInches = distance;
 			autoDrivingParams.totalRotationsToDesiredPosition = DistanceToShaftRotationCount(distance, heading);
+			autoDrivingParams.slowDownRotationCountThreshold = autoDrivingParams.totalRotationsToDesiredPosition * AutoDriveSlowDownPercentage;
 			autoDrivingParams.speedScaleFactor = speedScaleFactor;
 
 			Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO,"Auto Drive Mode ENABLED, heading = %s, distance = %f inches, %g rotations, speed scale factor = %f\n",
@@ -647,18 +650,16 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar[]) {
 
 				// Calculate the speed that the Robot should start rotating at.
 
-				/*
-				float percentageOfMaxSpeed = CalcPercentageOfMaxSpeed(distanceFromGoal,
-																	  autoDrivingParams.totalRotationsToDesiredPosition,
-																	  AutoDriveSlowDownThresholdInShaftRotations);
-				*/
+				float slowDownPercentageOfSpeed = 1.0; /*CalcPercentageOfMaxSpeed(distanceFromGoal[0],
+																	  	  autoDrivingParams.totalRotationsToDesiredPosition,
+																		  autoDrivingParams.slowDownRotationCountThreshold); */
 
 				if ((autoDrivingParams.autoHeading == DriveForward) || (autoDrivingParams.autoHeading == DriveBack))
 				{
-					AutoDriveFrontLeftMotorSpeed *= AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
-					AutoDriveBackLeftMotorSpeed *= AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
-					AutoDriveFrontRightMotorSpeed *= AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
-					AutoDriveBackRightMotorSpeed *= AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
+					AutoDriveFrontLeftMotorSpeed *= slowDownPercentageOfSpeed * AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
+					AutoDriveBackLeftMotorSpeed *= slowDownPercentageOfSpeed * AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
+					AutoDriveFrontRightMotorSpeed *= slowDownPercentageOfSpeed * AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
+					AutoDriveBackRightMotorSpeed *= slowDownPercentageOfSpeed * AutoDriveForwardBackHeadingSpeedScaleFactor * autoDrivingParams.speedScaleFactor;
 				}
 				else
 				{
@@ -1021,7 +1022,7 @@ static double CalcPercentageOfMaxSpeed(double absoluteDistanceFromGoal,
     }
     else
     {
-        double sinoidal = sin((M_PI / 2.0) * (absoluteDistanceFromGoal / absoluteGoalDistance));
+        double sinoidal = sin((M_PI / 2.0) * (absoluteDistanceFromGoal / absoluteSlowDownThresholdDistance));
 
         return sinoidal;
     }

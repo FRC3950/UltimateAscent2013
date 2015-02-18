@@ -132,6 +132,9 @@ private:
 		// Holds the shaft count total when the desired driving position is reached.
 		double totalRotationsToDesiredPosition;
 
+		// When to start slowing down.
+		double slowDownRotationCountThreshold;
+
 		// When in AutoMode Driving this contains the distance
 		// to drive expressed in inches.
 		float autoDriveDistanceInInches;
