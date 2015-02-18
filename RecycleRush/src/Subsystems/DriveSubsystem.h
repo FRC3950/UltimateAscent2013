@@ -27,7 +27,7 @@
 // items that the drive subsystem uses.
 namespace DriveSubsystemConfigValueDefaults
 {
-	const bool Drive_UseGyroDefaultValue = true;
+	const bool Drive_UseGyroDefaultValue = false;
 }
 
 enum DriveHeading {
