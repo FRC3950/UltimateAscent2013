@@ -40,6 +40,7 @@ namespace ConfigKeys
 	extern const std::string Drive_AutoDriveFowardBackHeadingSpeedScaleFactorKey;
 	extern const std::string Drive_AutoDriveLeftRightHeadingSpeedScaleFactorKey;
 	extern const std::string Drive_AutoDriveSlowDownThresholdInInchesKey;
+	extern const std::string Drive_AutoDriveStartSlowingDistancePercentageKey;
 	extern const std::string Drive_AutoDriveTargetDistanceEpsilonInInchesKey;
 	extern const std::string Drive_EnableSafety;
 	extern const std::string Drive_SafetyTimeOut;
@@ -61,5 +62,7 @@ namespace ConfigKeys
 	extern const std::string Drive_AutoDriveFrontRightSpeedKey;
 	extern const std::string Drive_AutoDriveBackLeftSpeedKey;
 	extern const std::string Drive_AutoDriveBackRightSpeedKey;
+
+	extern const std::string Drive_AutoDriveMinSlowDownSpeedPercentageKey;
 }
 

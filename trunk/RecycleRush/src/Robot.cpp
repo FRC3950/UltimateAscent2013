@@ -84,6 +84,10 @@ void Robot::RobotInit() {
 void Robot::DisabledInit(){
 	Logger *logger = Logger::GetInstance();
 	logger->Log(RobotLogId, Logger::kINFO, "DisabledInit() -> Entered\n");
+
+	// Make sure the lift subsystem starts in the down position when
+	// the robot is enabled the next time.
+	gantrySubsystem->FireLiftSolenoid(false);
 }
 
 void Robot::DisabledPeriodic() {

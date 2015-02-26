@@ -33,7 +33,7 @@ void DriveCommand::Execute() {
 	float twist = Robot::oi->GetDriveRotation();
 	bool slowModeEnabled = Robot::oi->GetSlowDownEnabled();
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand: drive joyStick values(x,y,twist,slowMode)=(%f, %f, %f,%s)",
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand: drive joyStick values(x,y,twist,slowMode)=(%f, %f, %f,%s)",
 							   x, y, twist, slowModeEnabled ? "TRUE" : "FALSE");
 
 	Robot::driveSubsystem->MecanumDrive(x, y, twist, slowModeEnabled);

@@ -111,6 +111,17 @@ static float AutoDriveSlowDownThresholdInInches = AUTO_DRIVE_SLOW_DOWN_THRESHOLD
 
 static float AutoDriveSlowDownThresholdInShaftRotations = -1.0;
 
+// The percentage of the distance to drive greater than which to travel at full speed
+// and beneath which to begin slowing down.
+static const double AUTO_DRIVE_START_SLOWING_DISTANCE_PERCENTAGE_DEFAULT = 0.80;
+static double AutoDriveStartSlowingDistancePercentage = AUTO_DRIVE_START_SLOWING_DISTANCE_PERCENTAGE_DEFAULT;
+
+
+// This constant is used to impose a floor on the percentage amount to use of the current
+// the current speed when braking so that the Robot doesn't decelerate to slow of a speed.
+static const double AUTO_DRIVE_MIN_SLOW_DOWN_SPEED_PERCENTAGE_DEFAULT = 0.15;
+static double AutoDriveMinSlowDownSpeedPercentage = AUTO_DRIVE_MIN_SLOW_DOWN_SPEED_PERCENTAGE_DEFAULT;
+
 // Epsilon to use to figure out if close enough to the auto-drive target.
 static const float AUTO_DRIVE_TARGET_DISTANCE_EPSILON_IN_INCHES_DEFAULT = 2.0;
 static float AutoDriveTargetDistanceEpsilonInInches = AUTO_DRIVE_TARGET_DISTANCE_EPSILON_IN_INCHES_DEFAULT;
@@ -248,6 +259,8 @@ static void InitDriveSubsystemConfiguration()
 
 		AutoDriveSlowDownThresholdInShaftRotations = DistanceToShaftRotationCount(AutoDriveSlowDownThresholdInInches, DriveForward);
 
+		AutoDriveStartSlowingDistancePercentage = configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveStartSlowingDistancePercentageKey, AUTO_DRIVE_START_SLOWING_DISTANCE_PERCENTAGE_DEFAULT);
+
 		AutoDriveTargetDistanceEpsilonInInches = static_cast<float>(configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveTargetDistanceEpsilonInInchesKey, AUTO_DRIVE_TARGET_DISTANCE_EPSILON_IN_INCHES_DEFAULT));
 
 		AutoDriveTargetDistanceEpsilonInCounts = DistanceToShaftRotationCount(AutoDriveTargetDistanceEpsilonInInches, DriveForward);
@@ -260,6 +273,7 @@ static void InitDriveSubsystemConfiguration()
 
 		AutoDriveBackRightMotorSpeed = configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveBackRightSpeedKey, AUTO_DRIVE_BACK_RIGHT_SPEED_DEFAULT);
 
+		AutoDriveMinSlowDownSpeedPercentage = configMgr->getDoubleVal(ConfigKeys::Drive_AutoDriveMinSlowDownSpeedPercentageKey, AUTO_DRIVE_MIN_SLOW_DOWN_SPEED_PERCENTAGE_DEFAULT);
 
 		Logger* logger = Logger::GetInstance();
 
@@ -284,6 +298,7 @@ static void InitDriveSubsystemConfiguration()
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveSlowDownThresholdInShaftRotations = %f\n", AutoDriveSlowDownThresholdInShaftRotations);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveTargetDistanceEpsilonInInches = %f\n", AutoDriveTargetDistanceEpsilonInInches);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveTargetDistanceEpsilonInCounts = %f\n", AutoDriveTargetDistanceEpsilonInCounts);
+		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: AutoDriveMinSlowDownSpeedPercentage = %g\n", AutoDriveMinSlowDownSpeedPercentage);
 
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: SlowDownScalingFactor = %f\n", Slow_Down_Scaling_Factor);
 		logger->Log(DriveSubsystemLogId, Logger::kINFO, "DriveSubsystem: XScalingFactor = %f\n", X_Scale_Factor);
@@ -455,7 +470,7 @@ void DriveSubsystem::MecanumDrive(float x, float y, float twist, bool slowMode) 
 	//Scale twist so movements are smoother.
 	twist *= Twist_Scale_Factor * currScaleFactor;
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
+	Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kTRACE, "DriveSubsystem:Filtered(x,y,twist,angle)=(%f, %f, %f, %f)\n", x, y, twist, gyroAngle);
 
 	robotDrive->MecanumDrive_Cartesian(x, y, twist, gyroAngle);
 
@@ -521,20 +536,20 @@ bool DriveSubsystem::AutoDriveSetup(DriveHeading heading, float distance, double
 	if (autoMode == Off) {
 		if (DriveHeadingValid(heading) && (distance > 0.0) && (speedScaleFactor > 0.0))
 		{
-			const double AutoDriveSlowDownPercentage = .90;
 
 			autoMode = Driving;
 			autoActionState = NotStarted;
 			autoDrivingParams.autoHeading = heading;
 			autoDrivingParams.autoDriveDistanceInInches = distance;
 			autoDrivingParams.totalRotationsToDesiredPosition = DistanceToShaftRotationCount(distance, heading);
-			autoDrivingParams.slowDownRotationCountThreshold = autoDrivingParams.totalRotationsToDesiredPosition * AutoDriveSlowDownPercentage;
+			autoDrivingParams.slowDownRotationCountThreshold = autoDrivingParams.totalRotationsToDesiredPosition * AutoDriveStartSlowingDistancePercentage;
 			autoDrivingParams.speedScaleFactor = speedScaleFactor;
 
-			Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO,"Auto Drive Mode ENABLED, heading = %s, distance = %f inches, %g rotations, speed scale factor = %f\n",
+			Logger::GetInstance()->Log(DriveSubsystemLogId,Logger::kINFO,"Auto Drive Mode ENABLED, heading = %s, distance = %f inches, %g rotations, %g start slowing rotations, speed scale factor = %f\n",
 									   DriveHeadingToString(autoDrivingParams.autoHeading).c_str(),
 									   autoDrivingParams.autoDriveDistanceInInches,
 									   autoDrivingParams.totalRotationsToDesiredPosition,
+									   autoDrivingParams.slowDownRotationCountThreshold,
 									   autoDrivingParams.speedScaleFactor);
 			return true;
 		}
@@ -632,21 +647,21 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar[]) {
 	// or we can find the shortest distance by comparing the
 	if (autoMode == Driving)
 	{
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 1");
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveMakeProgress:: Step 1");
 		if (autoActionState == InProgress)
 		{
 			double distanceFromGoal[4];
 
 			AutoDriveCalcDistanceFromGoal(distanceTraveledSoFar, distanceFromGoal);
 
-			Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 2");
+			Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveMakeProgress:: Step 2");
 
 			// If the distance from the goal is NOT within the epsilon AND
 			// if the distance from the targeted distance has not grown
 			// since the last distance calculation apply voltage.
 			if (!AutoDriveShouldStop(distanceFromGoal)) {
 
-				Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveMakeProgress:: Step 3");
+				Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveMakeProgress:: Step 3");
 
 				// Calculate the speed that the Robot should start rotating at.
 
@@ -729,11 +744,11 @@ void DriveSubsystem::AutoDriveMakeProgress(double distanceTraveledSoFar[]) {
 void DriveSubsystem::AutoDriveCalcDistanceFromGoal(double distanceTraveledSoFar[],
 												   double distanceResult[]) const
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveCalcDistanceFromGoal:: Step 1");
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveCalcDistanceFromGoal:: Step 1");
 
 	distanceResult[0] = autoDrivingParams.totalRotationsToDesiredPosition - distanceTraveledSoFar[0];
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveCalcDistanceFromGoal:: Step 2");
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveCalcDistanceFromGoal:: Step 2");
 
 	if (!AutoDriveUseOneMotorForDistanceDrive)
 	{
@@ -742,26 +757,26 @@ void DriveSubsystem::AutoDriveCalcDistanceFromGoal(double distanceTraveledSoFar[
 		distanceResult[3] = autoDrivingParams.totalRotationsToDesiredPosition - distanceTraveledSoFar[3];
 	}
 
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveCalcDistanceFromGoal:: Step 3");
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveCalcDistanceFromGoal:: Step 3");
 
 }
 
 bool DriveSubsystem::AutoDriveShouldStop(double distanceFromGoal[]) const
 {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 1");
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: Step 1");
 
 	if (AutoDriveUseOneMotorForDistanceDrive)
 	{
 		const double AUTO_DRIVE_INCREASED_DISTANCE_EPSILON = 24.0;
 
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 2 - One Motor.");
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: Step 2 - One Motor.");
 		bool result = (distanceFromGoal[0] <= 0) || ((distanceFromGoal[0] - autoDrivingParams.lastDistanceFromGoal[0]) > AUTO_DRIVE_INCREASED_DISTANCE_EPSILON);
 		//bool result = (distanceFromGoal[0] <= 0) || (distanceFromGoal[0] > autoDrivingParams.lastDistanceFromGoal[0]);
 
 		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: distanceFromGoal[0]=%g, lastDistanceFromGoal[0]=%g,stopping=%s\n",
 								   distanceFromGoal[0], autoDrivingParams.lastDistanceFromGoal[0], result ? "TRUE" : "FALSE");
 
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Step 3 - One Motor.");
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: Step 3 - One Motor.");
 
 		return result;
 	}
@@ -769,7 +784,7 @@ bool DriveSubsystem::AutoDriveShouldStop(double distanceFromGoal[]) const
 	// Check all four motors.
 	for (int i = 0; i < 4; ++i)
 	{
-		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "AutoDriveShouldStop:: Motor%d - distanceFromGoal=%g, lastDistanceFromGoal=%g\n",
+		Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "AutoDriveShouldStop:: Motor%d - distanceFromGoal=%g, lastDistanceFromGoal=%g\n",
 								   i, distanceFromGoal[i], autoDrivingParams.lastDistanceFromGoal[i]);
 
 		// If the current motor hasn't reached its goal, then don't stop unless...
@@ -1022,7 +1037,14 @@ static double CalcPercentageOfMaxSpeed(double absoluteDistanceFromGoal,
     }
     else
     {
-        double sinoidal = sin((M_PI / 2.0) * (absoluteDistanceFromGoal / absoluteSlowDownThresholdDistance));
+        double sinoidal = sin((M_PI / 2.0) * (absoluteDistanceFromGoal / absoluteGoalDistance));
+
+        // If the percentage of full speed is less than the MinSpeedPercentage
+        // then impose a floor so the robot doesn't go too slowly.
+        if (sinoidal < AutoDriveMinSlowDownSpeedPercentage)
+        {
+        	sinoidal = AutoDriveMinSlowDownSpeedPercentage;
+        }
 
         return sinoidal;
     }
