@@ -52,6 +52,8 @@ namespace ConfigKeys
 
 	const std::string Drive_AutoDriveTargetDistanceEpsilonInInchesKey = "Drive_AutoDriveTargetDistanceEpsilonInInches";
 
+	const std::string Drive_AutoDriveStartSlowingDistancePercentageKey = "Drive_AutoDriveStartSlowingDistancePercentage";
+
 	const std::string Drive_EnableSafety = "Drive_EnableSafety";
 
 	const std::string Drive_SafetyTimeOut = "Drive_SafetyTimeOut";
@@ -83,4 +85,6 @@ namespace ConfigKeys
 	const std::string Drive_AutoDriveBackLeftSpeedKey = "Drive_AutoDriveBackLeftSpeed";
 
 	const std::string Drive_AutoDriveBackRightSpeedKey = "Drive_AutoDriveBackRightSpeed";
+
+	const std::string Drive_AutoDriveMinSlowDownSpeedPercentageKey = "Drive_AutoDriveMinSlowDownSpeedPercentage";
 }
