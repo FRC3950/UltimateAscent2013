@@ -41,7 +41,7 @@ void DriveCommand::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool DriveCommand::IsFinished() {
-	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kINFO, "DriveCommand IsFinished() called.");
+	Logger::GetInstance()->Log(DriveSubsystemLogId, Logger::kTRACE, "DriveCommand IsFinished() called.");
 	return false;
 }
 

@@ -54,11 +54,11 @@ OI::OI()
 	closeGripButton = new JoystickButton(gantryController, 2);
 	dropDownAndOpenButton = new JoystickButton(gantryController, 6);
 	//toggleGripButton = new JoystickButton(gantryController, 6);
-
+#if 0
 	autoTestButton = new JoystickButton(driveJoystick, 8);
 	rightAutoTestButton = new JoystickButton(driveJoystick, 6);
 	leftAutoTestButton = new JoystickButton(driveJoystick, 5);
-
+#endif
 	slowDownButton = new JoystickButton(driveJoystick, 3);
 
 	//fireLiftSolenoidButton->WhenPressed(new ToggleLiftSolenoidCommand());
@@ -68,9 +68,11 @@ OI::OI()
 	closeGripButton->WhenPressed(new CloseGripCommand());
 	dropDownAndOpenButton->WhenPressed(new DropAndOpenCommannd());
 
+#if 0
 	autoTestButton->WhenPressed(new AutoDriveCommand(DriveForward, 36));
 	rightAutoTestButton->WhenPressed(new AutoDriveCommand(DriveRight, 192));
 	leftAutoTestButton->WhenPressed(new AutoDriveCommand(DriveLeft, 192));
+#endif
 
 	slowModeCommand = new SlowModeCommand();
 	slowDownButton->WhenPressed(slowModeCommand);

@@ -17,6 +17,8 @@
 #include "Commands/Autonomous_1RS_Command.h"
 #include "Commands/Autonomous_1TS_Command.h"
 #include "Commands/Autonomous_3SS_Command.h"
+#include "Commands/Autonomous_1TSS_Command.h"
+#include "Commands/Autonomous_Do_Nothing_Command.h"
 #include "Config/CsvConfigFileReader.h"
 #include "Config/ConfigInstanceMgr.h"
 
@@ -65,10 +67,13 @@ void Robot::RobotInit() {
 	lw = LiveWindow::GetInstance();
 
 	autonomousChooser = new SendableChooser();
-	autonomousChooser->AddDefault("Autonomous_1RS_Command", new Autonomous_1RS_Command());
-	autonomousChooser->AddObject("Autonomous_1TS_Command", new Autonomous_1TS_Command());
-	autonomousChooser->AddObject("Autonomous_3SS_Command", new Autonomous_3SS_Command());
-	autonomousChooser->AddObject("Autonomous_1CS2_Command", new Autonomous_1CS2_Command());
+	autonomousChooser->AddDefault("Can/Robot set", new Autonomous_1RS_Command());
+	autonomousChooser->AddObject("Can/Tote set", new Autonomous_1TS_Command());
+	autonomousChooser->AddObject("stack set", new Autonomous_3SS_Command());
+	autonomousChooser->AddObject("Do not use this one", new Autonomous_1CS2_Command());
+	autonomousChooser->AddObject("Can/Tote set but stay in one place", new Autonomous_1TSS_Command());
+	autonomousChooser->AddObject("Do Nothing", new Autonomous_Do_Nothing_Command());
+
 
 	SmartDashboard::PutData("Autonomous Modes", autonomousChooser);
 
