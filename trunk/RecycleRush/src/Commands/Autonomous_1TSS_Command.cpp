@@ -1,4 +1,4 @@
-#include "Autonomous_1TS_Command.h"
+#include "Autonomous_1TSS_Command.h"
 #include "ToggleLiftSolenoidCommand.h"
 #include "CloseGripCommand.h"
 #include "DropDownCommand.h"
@@ -13,7 +13,7 @@
 static const double Auto1TS_MoveLeftDistanceDefault = 150;
 static const double Auto1TS_MoveForwardDistanceDefault = 30;
 
-Autonomous_1TS_Command::Autonomous_1TS_Command()
+Autonomous_1TSS_Command::Autonomous_1TSS_Command()
 {
 	ConfigMgr *configMgr = ConfigInstanceMgr::getInstance();
 
@@ -30,10 +30,4 @@ Autonomous_1TS_Command::Autonomous_1TS_Command()
 	AddSequential(new CloseGripCommand());
 	AddSequential(new StallCommand(0.5));
 	AddSequential(new LiftUpCommand());
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new AutoDriveCommand(DriveLeft, configMgr->getDoubleVal(ConfigKeys::Auto1TS_MoveLeftDistance_Key, Auto1TS_MoveLeftDistanceDefault)));
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new DropDownCommand());
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new OpenGripCommand());
 }

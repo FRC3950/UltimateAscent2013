@@ -551,6 +551,9 @@ bool DriveSubsystem::AutoDriveSetup(DriveHeading heading, float distance, double
 									   autoDrivingParams.totalRotationsToDesiredPosition,
 									   autoDrivingParams.slowDownRotationCountThreshold,
 									   autoDrivingParams.speedScaleFactor);
+
+			EnableDriveSubsystem();
+
 			return true;
 		}
 		else{
