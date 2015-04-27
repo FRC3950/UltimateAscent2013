@@ -2,7 +2,7 @@
 #include "../Robot.h"
 
 SlowModeCommand::SlowModeCommand()
-	: m_slowModeEnabled(false)
+	: m_slowModeEnabled(true)
 {
 }
 

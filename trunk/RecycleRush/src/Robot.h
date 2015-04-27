@@ -42,10 +42,14 @@ public:
 	virtual void TeleopInit();
 	virtual void TeleopPeriodic();
 	virtual void TestPeriodic();
+	void ShowCompressorState(bool forcedUpdate);
+	float ConvertVoltsToPSI(float Vs);
 
 private:
 	Command *autonomousCommand;
 	LiveWindow *lw;
 	SendableChooser *autonomousChooser;
+	double lastTimeCompressorDisplayed;
+	bool skipDisableModeActions;
 };
 #endif
