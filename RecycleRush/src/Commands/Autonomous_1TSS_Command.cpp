@@ -20,14 +20,14 @@ Autonomous_1TSS_Command::Autonomous_1TSS_Command()
 	AddSequential(new CloseGripCommand());
 	AddSequential(new StallCommand(0.5));
 	AddSequential(new LiftUpCommand());
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new AutoDriveCommand(DriveForward, configMgr->getDoubleVal(ConfigKeys::Auto1TS_MoveForwardDistance_Key, Auto1TS_MoveForwardDistanceDefault)));
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new DropDownCommand());
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new OpenGripCommand());
-	AddSequential(new StallCommand(0.7));
-	AddSequential(new CloseGripCommand());
-	AddSequential(new StallCommand(0.5));
-	AddSequential(new LiftUpCommand());
+//	AddSequential(new StallCommand(0.5));
+//	AddSequential(new AutoDriveCommand(DriveForward, configMgr->getDoubleVal(ConfigKeys::Auto1TS_MoveForwardDistance_Key, Auto1TS_MoveForwardDistanceDefault)));
+//	AddSequential(new StallCommand(0.5));
+//	AddSequential(new DropDownCommand());
+//	AddSequential(new StallCommand(0.5));
+//	AddSequential(new OpenGripCommand());
+//	AddSequential(new StallCommand(0.7));
+//	AddSequential(new CloseGripCommand());
+//	AddSequential(new StallCommand(0.5));
+//	AddSequential(new LiftUpCommand());
 }
